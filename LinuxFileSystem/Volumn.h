@@ -1,7 +1,9 @@
 #pragma once
 #include <array>
 #include "INode.h"
-
+/**
+* 作用不明
+*/
 class Volumn {
 	// inode数组，最多20个inode
 	std::array<INode&, 20> inodeArray;

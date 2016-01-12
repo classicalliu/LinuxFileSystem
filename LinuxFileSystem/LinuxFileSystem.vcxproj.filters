@@ -33,5 +33,14 @@
     <ClInclude Include="File.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="FileSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Block.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

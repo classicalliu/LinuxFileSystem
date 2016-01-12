@@ -122,11 +122,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Block.h" />
     <ClInclude Include="Directory.h" />
     <ClInclude Include="File.h" />
+    <ClInclude Include="FileSystem.h" />
     <ClInclude Include="Group.h" />
     <ClInclude Include="INode.h" />
     <ClInclude Include="User.h" />
+    <ClInclude Include="UserInterface.h" />
     <ClInclude Include="Volumn.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
