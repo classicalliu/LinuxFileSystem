@@ -20,6 +20,10 @@ class User {
 
 public:
 
+
+	User() {
+	}
+
 	User(const std::string& username, const std::string& password, int groud_id)
 		: username(username),
 		  password(password),

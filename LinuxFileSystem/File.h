@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include "INode.h"
 
 /**
 * 文件结构
@@ -12,7 +11,6 @@ class File {
 	std::string file_name;
 	short inode_id = 0;
 public:	
-	// 文件块大小为512B
 	static const int SIZE = 512;
 
 	File(const std::string& file_name, const short inode_id)

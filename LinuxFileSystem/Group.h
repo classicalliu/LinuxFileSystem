@@ -2,13 +2,16 @@
 #include <string>
 
 class Group {
-	int group_id;
+	int group_id = 0;
 	std::string group_name;
 
 public:
 	Group(const int group_id, const std::string& group_name)
 		: group_id(group_id),
 		group_name(group_name) {
+	}
+
+	Group() {
 	}
 
 	const int& get_group_id() const {

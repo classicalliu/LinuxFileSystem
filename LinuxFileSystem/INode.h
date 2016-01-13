@@ -1,5 +1,8 @@
 #pragma once
 #include <array>
+#include <memory>
+#include "Block.h"
+#include <ctime>
 
 class INode {
 	// id号
@@ -9,7 +12,7 @@ class INode {
 	// 文件链接计数
 	int count = 0;
 	// 文件地址块数组
-	std::array<INode&, 6> file_address_array;
+	std::array<std::shared_ptr<Block>, 6> file_address_array;
 	// 文件所属用户组
 	int group_id = 0;
 	// 文件权限
@@ -18,11 +21,21 @@ class INode {
 	time_t last_modify_time = 0;
 
 public:
-	INode(short id, int size, int count, const std::array<INode&, 6>& file_address_array, int group_id, const std::string& authority, time_t last_modify_time);
 
 	INode() {
 	}
 
+
+	INode(const short id, const int size, const int count, const std::array<std::shared_ptr<Block>, 6>& file_address_array, const int group_id, const std::string& authority)
+		: id(id),
+		  size(size),
+		  count(count),
+		  file_address_array(file_address_array),
+		  group_id(group_id),
+		  authority(authority) {
+		auto time_now = time(nullptr);
+		last_modify_time = time_now;
+	}
 
 	const short& get_id() const {
 		return id;
@@ -72,21 +85,11 @@ public:
 		this->last_modify_time = last_modify_time;
 	}
 
-
-	std::array<INode&, 6>& get_file_address_array() {
+	std::array<std::shared_ptr<Block>, 6>& get_file_address_array() {
 		return file_address_array;
 	}
 
-	void set_file_address_array(const std::array<INode&, 6>& file_address_array) {
+	void set_file_address_array(const std::array<std::shared_ptr<Block>, 6>& file_address_array) {
 		this->file_address_array = file_address_array;
 	}
 };
-
-inline INode::INode(short id, int size, int count, const std::array<INode&, 6>& file_address_array, int group_id, const std::string& authority, time_t last_modify_time): id(id),
-                                                                                                                                                                          size(size),
-                                                                                                                                                                          count(count),
-                                                                                                                                                                          file_address_array(file_address_array),
-                                                                                                                                                                          group_id(group_id),
-                                                                                                                                                                          authority(authority),
-                                                                                                                                                                          last_modify_time(last_modify_time) {
-}

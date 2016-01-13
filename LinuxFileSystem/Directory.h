@@ -13,8 +13,19 @@ class Directory {
 	Directory *parent_directory = nullptr;
 	std::set<std::shared_ptr<Directory>> children_directories;
 	std::set<File> children_files;
+	short inode_id = 0;
 
 public:
+
+
+	Directory() {
+	}
+
+	Directory(const std::string& name, Directory* const parent_directory, const short inode_id)
+		: name(name),
+		  parent_directory(parent_directory),
+		  inode_id(inode_id){
+	}
 
 	std::set<std::shared_ptr<Directory>>& get_children_directories() {
 		return children_directories;
@@ -24,7 +35,7 @@ public:
 		return children_files;
 	}
 
-	const std::string& name1() const {
+	const std::string& get_name() const {
 		return name;
 	}
 
@@ -32,7 +43,7 @@ public:
 		this->name = name;
 	}
 
-	Directory* const& parent_directory1() const {
+	Directory* const& get_parent_directory() const {
 		return parent_directory;
 	}
 
