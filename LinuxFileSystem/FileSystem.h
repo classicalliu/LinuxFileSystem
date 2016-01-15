@@ -7,30 +7,61 @@
 #include "Group.h"
 #include "Directory.h"
 
-class FileSystem {
+const int BLOCK_COUNT = 200;
 
+namespace init_file {
+	User user;
+	Group group;
+	Directory directory;
+}
+
+class FileSystem {
 	// 文件系统的名字
 	std::string name;
 	// 文件系统大小, 默认200个块，每个512B
-	int size = 200 * 512;
+	int size = BLOCK_COUNT * 512;
 	//记录所有组
 	std::set<Group> group_set;
 	// 记录用户
 	std::set<User> user_set;
 	// 记录空闲块
-	std::list<Block> block_list;
+	std::set<std::shared_ptr<Block>> block_set;
 	// 记录所有的inode
-	std::set<INode> inode_set;
+	std::set<std::shared_ptr<INode>> inode_set;
+	// 记录所有的目录的实体
+	std::set<std::shared_ptr<Directory>> directory_set;
+	//记录所有文件的实体
+	std::set<std::shared_ptr<File>> file_set;
 	// 根目录
 	Directory &root_directory;
+//	std::shared_ptr<Directory> root_directory;
 	// 当前目录
 	// 可以从当前目录中读取File信息，从File中读取inode信息
 	Directory &current_directory;
+//	std::shared_ptr<Directory> current_directory;
 	// 当前组
 	Group &current_group;
 	// 当前用户
 	User &current_user;
 public:
+
+	// 初始化系统名字
+
+	FileSystem();
+
+
+	FileSystem(const std::string& name)
+		: name(name),
+		  root_directory(init_file::directory),
+		  current_directory(init_file::directory),
+		  current_group(init_file::group),
+		  current_user(init_file::user) {
+	}
+
+	// 初始化所有的条件
+	// 创建root目录
+	// 分配所有的空块， 200个，每个512B
+	void init();
 
 	// 检测用户是否存在
 	bool check_username(std::string username);
@@ -39,7 +70,7 @@ public:
 	// 检测文件是否已经存在
 	bool check_file_exist(std::string filename) const;
 	// 检测文件夹是否已经存在
-	bool check_directory_exist(std::string directory_name);
+	bool check_directory_exist(std::string directory_name) const;
 
 	/**
 	* 用户登录函数
@@ -63,19 +94,19 @@ public:
 	* 根据当前用户组id找出用户
 	*/
 	const Group& load_group_by_id(const short id);
-	const File& load_file_by_filename(const std::string& filename) const;
-	const INode& load_inode_by_id(const short id);
+	File& load_file_by_filename(const std::string& filename) const;
+	INode& load_inode_by_id(const short id);
 
 	/**
 	* 创建新文件
 	*/
-	bool new_file(std::string filename);
+	std::string new_file(std::string filename);
 
 	// 创建新文件夹
-	bool new_directory(std::string directory_name);
+	std::string new_directory(std::string directory_name);
 
 	// ls命令显示当前的文件和文件夹的名字
-	std::pair<std::vector<std::string>, std::vector<std::string>> ls_names();
+	std::pair<std::vector<std::string>, std::vector<std::string>> ls_names() const;
 
 	// 修改密码
 	bool change_password(std::string password) const;
@@ -86,7 +117,69 @@ public:
 	bool change_mode(std::string filename, std::string authority);
 
 	// 修改文件用户
+	std::string change_file_user(std::string filename, std::string username);
+
+	// 修改文件组
+	std::string change_file_group(std::string filename, std::string group);
+	// 显示当前目录
+	std::string display_current_directory() const;
+	// 改变当前目录
+	bool change_current_directory(std::string dir);
+
+	// 删除文件
+	std::string remove_file(std::string filename);
+
+	// 删除文件夹rm -rf
+	std::string remove_directory(std::string dirctory_name);
+	// 删除空文件夹 rmdir
+	std::string remove_empty_directory(std::string directory_name);
+
+	// mv命令，重命名文件
+	std::string rename_file(std::string filename_old, std::string filename_new) const;
+
+	// cp 命令，拷贝文件,旧文件，新文件名，只要名字，不要路径，简单实现
+	std::string copy_file(std::string filename, std::string filename_newfile);
+
+	// ln命令，建立文件链接
+	std::string link_file(std::string filename, std::string link_name);
+		
 };
+
+inline FileSystem::FileSystem() : root_directory(init_file::directory), current_directory(init_file::directory), current_group(init_file::group), current_user(init_file::user) {
+	name = "File_System";
+	init();
+}
+
+inline void FileSystem::init() {
+	// 初始化系统拥有的Block， 200个，每个512B
+	for (auto i = 0; i < BLOCK_COUNT; ++i) {
+		auto block_tmp = std::make_shared<Block>(i);
+		block_set.insert(block_tmp);
+	}
+	// 创建root组
+	Group group(0, "root_group");
+	group_set.insert(group);
+	// 创建root用户
+	User user("root", "root", 0);
+	user_set.insert(user);
+
+	// 分配root文件夹所需的inode
+	auto directory_inode = std::make_shared<INode>(1, 100, 0);
+	// 初次分配，所以分配第一个空块
+	directory_inode->get_file_address_array()[0] = *block_set.begin();
+	inode_set.insert(directory_inode);
+
+	// 生成root文件夹
+	auto directory_tmp = std::make_shared<Directory>("root", nullptr, 1);
+	directory_set.insert(directory_tmp);
+	// 切换root目录和current目录
+	root_directory = *directory_tmp;
+	current_directory = root_directory;
+
+	// 设置当前组和当前用户
+	current_group = group;
+	current_user = user;
+}
 
 inline bool FileSystem::check_username(std::string username)
 {
@@ -105,17 +198,17 @@ inline bool FileSystem::check_password(std::string password) const {
 inline bool FileSystem::check_file_exist(std::string filename) const {
 	// 查找当前目录下的子文件
 	auto files = current_directory.get_children_files();
-	auto flag = std::find_if(files.begin(), files.end(), [filename](const File & file_tmp) {return file_tmp.get_file_name() == filename; });
+	auto flag = std::find_if(files.begin(), files.end(), [filename](const std::shared_ptr<File> & file_tmp) {return file_tmp->get_file_name() == filename; });
 	if (flag != files.end()) {
 		return true;
 	}
 	return false;
 }
 
-inline bool FileSystem::check_directory_exist(std::string directory_name) {
+inline bool FileSystem::check_directory_exist(std::string directory_name) const {
 	// 查找当前目录下的子目录
 	auto directories = current_directory.get_children_directories();
-	auto flag = std::find_if(directories.begin(), directories.end(), [directory_name](const Directory & dr) {return dr.get_name() == directory_name; });
+	auto flag = std::find_if(directories.begin(), directories.end(), [directory_name](const std::shared_ptr<Directory> & dr) {return dr->get_name() == directory_name; });
 	if (flag == directories.end()) {
 		return false;
 	}
@@ -135,6 +228,7 @@ inline std::string&& FileSystem::login(std::string username, std::string passwor
 	return "success";
 }
 
+// TODO 用户注册后生成一个用户目录
 inline std::string&& FileSystem::user_register(std::string username, std::string password) {
 	// 找到了就提示用户已存在
 	if(check_username(username)) {
@@ -166,18 +260,18 @@ inline const Group& FileSystem::load_group_by_id(const short id) {
 	return *flag;
 }
 
-inline const File& FileSystem::load_file_by_filename(const std::string& filename) const {
+inline File& FileSystem::load_file_by_filename(const std::string& filename) const {
 	auto files = current_directory.get_children_files();
-	auto flag = std::find_if(files.begin(), files.end(), [filename](const File& file) {return file.get_file_name() == filename; });
-	return *flag;
+	auto flag = std::find_if(files.begin(), files.end(), [filename](const std::shared_ptr<File>& file) {return file->get_file_name() == filename; });
+	return *flag->get();
 }
 
-inline const INode& FileSystem::load_inode_by_id(const short id) {
-	auto flag = std::find_if(inode_set.begin(), inode_set.end(), [id](const INode &inode) {return inode.get_id() == id; });
-	return *flag;
+inline INode& FileSystem::load_inode_by_id(const short id) {
+	auto flag = std::find_if(inode_set.begin(), inode_set.end(), [id](const std::shared_ptr<INode> &inode) {return inode->get_id() == id; });
+	return *flag->get();
 }
 
-inline bool FileSystem::new_file(std::string filename) {
+inline std::string FileSystem::new_file(std::string filename) {
 	if (check_file_exist(filename)) {
 		return "file_already_exist";
 	}
@@ -188,8 +282,8 @@ inline bool FileSystem::new_file(std::string filename) {
 		return "filename_error";
 	}
 	// 检查是否有空闲块
-	if (block_list.empty()) {
-		return false;
+	if (block_set.empty()) {
+		return "no_space";
 	}
 	// 创建文件
 	// 创建inode
@@ -199,27 +293,28 @@ inline bool FileSystem::new_file(std::string filename) {
 	inode_new->set_id(id_new);
 
 	// 获取下一个空闲块
-	auto next_free_block = block_list.front();
+	auto next_free_block = *block_set.begin();
 	// 从空闲块列表中删除这个块
-	block_list.erase(block_list.begin());
+	block_set.erase(block_set.begin());
 	// 数组指向这个块
 	inode_new->get_file_address_array()[0] = std::make_shared<Block>(next_free_block);
 	// 设置用户组
-	inode_new->set_id(current_group.get_group_id());
+	inode_new->set_group_id(current_group.get_group_id());
 	// 设置最后修改时间
 	inode_new->set_last_modify_time(time(nullptr));
 	// 链接到文件
 	auto file = std::make_shared<File>(filename, id_new);
 
 	// 插入inode
-	inode_set.insert(*inode_new);
+	inode_set.insert(inode_new);
+	file_set.insert(file);
 	// 插入到当前目录下的文件列表中
-	current_directory.get_children_files().insert(*file);
+	current_directory.get_children_files().insert(file);
 
-	return true;
+	return "success";
 }
 
-inline bool FileSystem::new_directory(std::string directory_name) {
+inline std::string FileSystem::new_directory(std::string directory_name) {
 	// 检测文件夹是否已存在
 	if (check_directory_exist(directory_name)) {
 		return "directory_already_exist";
@@ -231,14 +326,14 @@ inline bool FileSystem::new_directory(std::string directory_name) {
 		return "directory_error";
 	}
 	// 检查是否有空闲块
-	if (block_list.empty()) {
-		return false;
+	if (block_set.empty()) {
+		return "no_space";
 	}
 	auto inode_id = inode_set.size() + 1;
 	auto inode_new = std::make_shared<INode>();
 	inode_new->set_id(inode_id);
-	auto next_free_block = block_list.front();
-	block_list.erase(block_list.begin());
+	auto next_free_block = *block_set.begin();
+	block_set.erase(block_set.begin());
 	// 数组指向这个块
 	inode_new->get_file_address_array()[0] = std::make_shared<Block>(next_free_block);
 	// 设置用户组
@@ -246,19 +341,22 @@ inline bool FileSystem::new_directory(std::string directory_name) {
 	// 设置最后修改时间
 	inode_new->set_last_modify_time(time(nullptr));
 	// 链接到文件夹
+//	auto directory_new = Directory(directory_name, &current_directory, inode_id);
 	auto directory_new = std::make_shared<Directory>(directory_name, &current_directory, inode_id);
+	// 加入文件夹
+	directory_set.insert(directory_new);
 
-	inode_set.insert(*inode_new);
+	inode_set.insert(inode_new);
 	current_directory.get_children_directories().insert(directory_new);
 
-	return true;
+	return "success";
 }
 
-inline std::pair<std::vector<std::string>, std::vector<std::string>> FileSystem::ls_names() {
+inline std::pair<std::vector<std::string>, std::vector<std::string>> FileSystem::ls_names() const {
 	std::vector<std::string> files;
 	std::vector<std::string> directories;
 	for (auto c : current_directory.get_children_files()) {
-		files.push_back(c.get_file_name());
+		files.push_back(c->get_file_name());
 	}
 	for (auto c : current_directory.get_children_directories()) {
 		directories.push_back(c->get_name());
@@ -286,4 +384,259 @@ inline bool FileSystem::change_mode(std::string filename, std::string authority)
 	auto inode = load_inode_by_id(inode_id);
 	inode.set_authority(authority);
 	return true;
+}
+
+inline std::string FileSystem::change_file_user(std::string filename, std::string username) {
+	// 不是root 用户无权操作
+	if (current_user.get_username() != "root") {
+		return "not_root";
+	}
+
+	// 查找用户是否存在
+	auto user_exist = std::find_if(user_set.begin(), user_set.end(), [username](const User &user) {return user.get_username() == username; });
+	if (user_exist == user_set.end()) {
+		return "user_not_exist";
+	}
+
+	// 查找文件是否存在
+	auto files = current_directory.get_children_files();
+	auto file_exist = std::find_if(files.begin(), files.end(), [filename](const std::shared_ptr<File> & file) {return file->get_file_name() == filename; });
+	if (file_exist == files.end()) {
+		return "file_not_exist";
+	}
+
+	// 获取要更改的用户和文件
+	auto user = *user_exist;
+	auto file = *file_exist->get();
+
+	auto file_inode = load_inode_by_id(file.get_inode_id());
+	file_inode.set_username(user.get_username());
+	return "success";
+}
+
+inline std::string FileSystem::change_file_group(std::string filename, std::string group_name) {
+	// 不是root 用户无权操作
+	if (current_user.get_username() != "root") {
+		return "not_root";
+	}
+
+	// 查找文件是否存在
+	auto files = current_directory.get_children_files();
+	auto file_exist = std::find_if(files.begin(), files.end(), [filename](const std::shared_ptr<File> & file) {return file->get_file_name() == filename; });
+	if (file_exist == files.end()) {
+		return "file_not_exist";
+	}
+
+	// 查找组是否存在
+	auto group_exist = std::find_if(group_set.begin(), group_set.end(), [group_name](const Group &group) {return group.get_group_name() == group_name; });
+	if (group_exist == group_set.end()) {
+		return "group_not_exist";
+	}
+
+	auto file = *file_exist->get();
+	auto group = *group_exist;
+
+	auto file_inode = load_inode_by_id(file.get_inode_id());
+	file_inode.set_group_id(group.get_group_id());
+	return "success";
+}
+
+inline std::string FileSystem::display_current_directory() const {
+	std::vector<std::string> dir;
+	// 获取当前目录的指针
+	for (auto index = &current_directory; *index != root_directory; index = index->get_parent_directory()) {
+		dir.push_back(index->get_name());
+	}
+	std::string result = "/";
+	for (auto i = dir.rbegin(); i != dir.rend(); ++i) {
+		result += *i;
+		result += "/";
+	}
+	return result;
+}
+
+inline bool FileSystem::change_current_directory(std::string dir) {
+	Directory dir_tmp;
+	if (dir[0] == '/') {
+		dir_tmp = root_directory;
+	}
+	auto username = current_user.get_username();
+	// 所有用户的用户目录，在root下
+	auto user_dirs = root_directory.get_children_directories();
+	// 获取当前用户的用户目录
+	auto user_dir = std::find_if(user_dirs.begin(), user_dirs.end(), [username](const std::shared_ptr<Directory> &directory) {return directory->get_name() == username; });
+
+	if (dir[0] == '~') {
+		dir_tmp = *(user_dir->get());
+	}
+	if (dir[0] == '.' && dir[1] == '.') {
+		dir_tmp = *current_directory.get_parent_directory();
+	}
+	// TODO 完成这个函数
+	return true;
+}
+
+inline std::string FileSystem::remove_file(std::string filename) {
+	// 先找到文件
+	auto files = current_directory.get_children_files();
+	auto file_exist = std::find_if(files.begin(), files.end(), [filename](const std::shared_ptr<File> &file) {return file->get_file_name() == filename; });
+	if (file_exist == files.end()) {
+		return "file_not_exist";
+	}
+
+	auto inode = load_inode_by_id(file_exist->get()->get_inode_id());
+
+	// 验证当前用户是否有权限
+	// root用户拥有所有的权限
+	if (current_user.get_username() != "root") {
+		auto authority = inode.get_authority();
+		if (authority[1] == '0') {
+			return "no_authority";
+		}
+	}
+
+	// 删除文件链接
+	files.erase(file_exist);
+	// 删除文件
+	file_set.erase(file_exist);
+	// TODO 回收空间
+	std::vector<int> vec;
+	for (auto c : inode.get_file_address_array()) {
+		if (c != nullptr) {
+			vec.push_back(c->get_address());
+		}
+	}
+	for (auto c : vec) {
+		block_set.insert(std::make_shared<Block>(c));
+	}
+	return "success";
+}
+
+inline std::string FileSystem::remove_directory(std::string dirctory_name) {
+	// TODO 递归
+	return "success";
+}
+
+inline std::string FileSystem::remove_empty_directory(std::string directory_name) {
+	auto directories = current_directory.get_children_directories();
+	auto directory_exist = std::find_if(directories.begin(), directories.end(), [directory_name](const std::shared_ptr<Directory> directory) {return directory->get_name() == directory_name; });
+	// 如果文件夹不存在
+	if (directory_exist == directories.end()) {
+		return "directory_not_exist";
+	}
+
+	// 判断文件夹是否为空
+	auto dir = **directory_exist;
+	if (!dir.get_children_files().empty() || !dir.get_children_directories().empty()) {
+		return "not_empty";
+	}
+
+	auto inode = load_inode_by_id(directory_exist->get()->get_inode_id());
+
+	// 验证当前用户是否有权限
+	// root用户拥有所有的权限
+	if (current_user.get_username() != "root") {
+		auto authority = inode.get_authority();
+		if (authority[1] == '0') {
+			return "no_authority";
+		}
+	}
+
+	// 删除文件
+	directories.erase(directory_exist);
+	directory_set.erase(directory_exist);
+
+	// TODO 回收空间
+	std::vector<int> vec;
+	for (auto c : inode.get_file_address_array()) {
+		if (c != nullptr) {
+			vec.push_back(c->get_address());
+		}
+	}
+	for (auto c : vec) {
+		block_set.insert(std::make_shared<Block>(c));
+	}
+	return "success";
+}
+
+inline std::string FileSystem::rename_file(std::string filename_old, std::string filename_new) const {
+	// 找到文件
+	auto files = current_directory.get_children_files();
+	auto file_exist = std::find_if(files.begin(), files.end(), [filename_old](const std::shared_ptr<File> file) {return file->get_file_name() == filename_old; });
+	if (file_exist == files.end()) {
+		return "file_not_exist";
+	}
+
+	// 检查新文件名字合法性
+	// 文件名为14位的英文或数字或下划线或点，数字不能开头，点开头为隐藏文件,14位
+	std::regex filename_pattern("[A-Za-z_.]\\w{0,14}");
+	// 如果文件名不合法
+	if (!std::regex_match(filename_old, filename_pattern)) {
+		return "filename_error";
+	}
+
+	auto& file = **file_exist;
+	file.set_file_name(filename_new);
+	return "success";
+}
+
+inline std::string FileSystem::copy_file(std::string filename, std::string filename_newfile) {
+	// 检查新文件名字合法性
+	// 文件名为14位的英文或数字或下划线或点，数字不能开头，点开头为隐藏文件,14位
+	std::regex filename_pattern("[A-Za-z_.]\\w{0,14}");
+	// 如果文件名不合法
+	if (!std::regex_match(filename_newfile, filename_pattern)) {
+		return "filename_error";
+	}
+
+	// 找到文件
+	auto files = current_directory.get_children_files();
+	auto file_exist = std::find_if(files.begin(), files.end(), [filename](const std::shared_ptr<File> file) {return file->get_file_name() == filename; });
+	if (file_exist == files.end()) {
+		return "file_not_exist";
+	}
+
+	// 获取文件引用
+	auto &file = **file_exist;
+
+	// TODO 假设生成的inode还是直接地址的
+
+	// 获取inode并生成新inode
+	auto inode = load_inode_by_id(file.get_inode_id());
+	auto inode_new = std::make_shared<INode>(inode);
+	// 设置新inode的id
+	inode_new->set_id(inode_set.size() + 1);
+	inode_set.insert(inode_new);
+
+	// TODO add new file
+	auto file_new = std::make_shared<File>(file);
+}
+
+inline std::string FileSystem::link_file(std::string filename, std::string link_name) {
+	// 检查链接名字合法性
+	// 文件名为14位的英文或数字或下划线或点，数字不能开头，点开头为隐藏文件,14位
+	std::regex filename_pattern("[A-Za-z_.]\\w{0,14}");
+	// 如果链接不合法
+	if (!std::regex_match(link_name, filename_pattern)) {
+		return "filename_error";
+	}
+
+	// 找到文件
+	auto files = current_directory.get_children_files();
+	auto file_exist = std::find_if(files.begin(), files.end(), [filename](const std::shared_ptr<File> file) {return file->get_file_name() == filename; });
+	if (file_exist == files.end()) {
+		return "file_not_exist";
+	}
+
+	// 获取文件引用
+	auto &file = **file_exist;
+	// 获取文件的inode信息
+	auto &inode = load_inode_by_id(file.get_inode_id());
+	// 增加inode的引用计数
+	inode.add_count();
+	auto link_file = std::make_shared<File>(file);
+	file.set_file_name(link_name);
+	file_set.insert(link_file);
+
+	return "success";
 }

@@ -18,6 +18,12 @@ public:
 		inode_id(inode_id) {
 	}
 
+	File(const File &file)
+		: file_content(file.file_content),
+		file_name(file.file_name),
+		inode_id(file.inode_id) {
+	}
+
 
 	const std::string& get_file_name() const {
 		return file_name;

@@ -33,4 +33,10 @@ public:
 	void set_group_name(std::string group_name) {
 		this->group_name = std::move(group_name);
 	}
+
+	friend bool operator<(const Group &group1, const Group &group2);
 };
+
+inline bool operator<(const Group& group1, const Group& group2) {
+	return group1.group_id < group2.group_id;
+}

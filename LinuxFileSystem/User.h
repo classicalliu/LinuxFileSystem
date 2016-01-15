@@ -3,6 +3,8 @@
 #include <list>
 #include "INode.h"
 #include <memory>
+#include "File.h"
+#include "Directory.h"
 
 /**
 * 用户类
@@ -17,7 +19,10 @@ class User {
 	int group_id = 0;
 	// 用户打开的文件列表的指针
 	std::list<std::shared_ptr<INode>> user_open_file_list;
-
+	// 属于这个用户的文件列表
+//	std::set<std::shared_ptr<File>> user_file_set;
+	// 属于这个用户的文件夹列表
+//	std::set<std::shared_ptr<Directory>> user_directory_set;
 public:
 
 
@@ -55,4 +60,19 @@ public:
 	}
 
 
+//	std::set<std::shared_ptr<File>>& get_user_file_set() {
+//		return user_file_set;
+//	}
+//
+//	void set_user_file_set(const std::set<std::shared_ptr<File>>& user_file_set) {
+//		this->user_file_set = user_file_set;
+//	}
+//
+//	std::set<std::shared_ptr<Directory>>& get_user_directory_set() {
+//		return user_directory_set;
+//	}
+//
+//	void set_user_directory_set(const std::set<std::shared_ptr<Directory>>& user_directory_set) {
+//		this->user_directory_set = user_directory_set;
+//	}
 };

@@ -129,11 +129,13 @@
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="Group.h" />
     <ClInclude Include="INode.h" />
+    <ClInclude Include="SetColor.h" />
     <ClInclude Include="User.h" />
     <ClInclude Include="UserInterface.h" />
     <ClInclude Include="Volumn.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="SetColor.cpp" />
     <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

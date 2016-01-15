@@ -42,9 +42,15 @@
     <ClInclude Include="UserInterface.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="SetColor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="UserInterface.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SetColor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

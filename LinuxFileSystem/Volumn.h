@@ -7,7 +7,7 @@
 class Volumn {
 public:
 	// inode数组，最多20个inode
-	std::array<INode&, 20> inode_array;
+	std::array<std::shared_ptr<INode>, 20> inode_array;
 	// size， 一个块最多为512B;
 	static const int size = 512;
 	// 卷盘块数
