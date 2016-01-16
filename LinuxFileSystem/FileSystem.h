@@ -1,4 +1,6 @@
 #pragma once
+#ifndef FILE_SYSTEM_H
+#define FILE_SYSTEM_H
 #include <string>
 #include <set>
 #include "User.h"
@@ -16,6 +18,8 @@ namespace init_file {
 }
 
 class FileSystem {
+	// TODO 暂时改为public
+public:
 	// 文件系统的名字
 	std::string name;
 	// 文件系统大小, 默认200个块，每个512B
@@ -33,16 +37,16 @@ class FileSystem {
 	//记录所有文件的实体
 	std::set<std::shared_ptr<File>> file_set;
 	// 根目录
-	Directory &root_directory;
+	Directory &root_directory = init_file::directory;
 //	std::shared_ptr<Directory> root_directory;
 	// 当前目录
 	// 可以从当前目录中读取File信息，从File中读取inode信息
-	Directory &current_directory;
+	Directory &current_directory = init_file::directory;
 //	std::shared_ptr<Directory> current_directory;
 	// 当前组
-	Group &current_group;
+	Group &current_group = init_file::group;
 	// 当前用户
-	User &current_user;
+	User &current_user = init_file::user;
 public:
 
 	// 初始化系统名字
@@ -50,13 +54,7 @@ public:
 	FileSystem();
 
 
-	FileSystem(const std::string& name)
-		: name(name),
-		  root_directory(init_file::directory),
-		  current_directory(init_file::directory),
-		  current_group(init_file::group),
-		  current_user(init_file::user) {
-	}
+	FileSystem(const std::string& name);
 
 	// 初始化所有的条件
 	// 创建root目录
@@ -71,6 +69,8 @@ public:
 	bool check_file_exist(std::string filename) const;
 	// 检测文件夹是否已经存在
 	bool check_directory_exist(std::string directory_name) const;
+
+	static std::vector<std::string> split_path(const std::string &path);
 
 	/**
 	* 用户登录函数
@@ -125,6 +125,7 @@ public:
 	std::string display_current_directory() const;
 	// 改变当前目录
 	bool change_current_directory(std::string dir);
+	void change_dir(std::vector<std::string> dir, int count, int count_size);
 
 	// 删除文件
 	std::string remove_file(std::string filename);
@@ -145,8 +146,11 @@ public:
 		
 };
 
-inline FileSystem::FileSystem() : root_directory(init_file::directory), current_directory(init_file::directory), current_group(init_file::group), current_user(init_file::user) {
-	name = "File_System";
+inline FileSystem::FileSystem() : name("File_System") {
+	init();
+}
+
+inline FileSystem::FileSystem(const std::string& name): name(name) {
 	init();
 }
 
@@ -164,13 +168,14 @@ inline void FileSystem::init() {
 	user_set.insert(user);
 
 	// 分配root文件夹所需的inode
-	auto directory_inode = std::make_shared<INode>(1, 100, 0);
+	auto directory_inode = std::make_shared<INode>(1, 100, 0, "root");
 	// 初次分配，所以分配第一个空块
 	directory_inode->get_file_address_array()[0] = *block_set.begin();
 	inode_set.insert(directory_inode);
 
-	// 生成root文件夹
+	// 生成root文件夹, root文件夹的父目录是其自身
 	auto directory_tmp = std::make_shared<Directory>("root", nullptr, 1);
+	directory_tmp->set_parent_directory(directory_tmp.get());
 	directory_set.insert(directory_tmp);
 	// 切换root目录和current目录
 	root_directory = *directory_tmp;
@@ -215,6 +220,31 @@ inline bool FileSystem::check_directory_exist(std::string directory_name) const 
 	return true;
 }
 
+inline std::vector<std::string> FileSystem::split_path(const std::string& path) {
+	std::vector<std::string> result;
+	std::string c = "/";
+	std::string::size_type pos1, pos2;
+	pos2 = path.find(c);
+	pos1 = 0;
+	while (std::string::npos != pos2)
+	{
+		result.push_back(path.substr(pos1, pos2 - pos1));
+
+		pos1 = pos2 + c.size();
+		pos2 = path.find(c, pos1);
+	}
+	if (pos1 != path.length())
+		result.push_back(path.substr(pos1));
+
+	std::vector<std::string> result2;
+	for (const auto &tmp : result) {
+		if (tmp != "") {
+			result2.push_back(tmp);
+		}
+	}
+	return result2;
+}
+
 inline std::string&& FileSystem::login(std::string username, std::string password)
 {
 	if (!check_username(username)) {
@@ -228,7 +258,7 @@ inline std::string&& FileSystem::login(std::string username, std::string passwor
 	return "success";
 }
 
-// TODO 用户注册后生成一个用户目录
+
 inline std::string&& FileSystem::user_register(std::string username, std::string password) {
 	// 找到了就提示用户已存在
 	if(check_username(username)) {
@@ -251,6 +281,12 @@ inline std::string&& FileSystem::user_register(std::string username, std::string
 	user_set.insert(*registed_user);
 
 	current_user = *registed_user;
+
+	// 生成一个用户目录
+	auto inode_id = static_cast<short>(inode_set.size() + 1);
+	auto directory_inode = std::make_shared<INode>(inode_id, 100, current_group.get_group_id(), current_user.get_username());
+	auto user_directory = std::make_shared<Directory>(username, &root_directory, directory_inode->get_id());
+	current_directory = *user_directory;
 
 	return "success";
 }
@@ -287,17 +323,18 @@ inline std::string FileSystem::new_file(std::string filename) {
 	}
 	// 创建文件
 	// 创建inode
-	auto id_new = inode_set.size() + 1;
+	auto id_new = static_cast<short>(inode_set.size() + 1);
 	auto inode_new = std::make_shared<INode>();
 //	INode inode_new;
 	inode_new->set_id(id_new);
 
 	// 获取下一个空闲块
-	auto next_free_block = *block_set.begin();
+	auto next_free_block = **block_set.begin();
 	// 从空闲块列表中删除这个块
 	block_set.erase(block_set.begin());
 	// 数组指向这个块
 	inode_new->get_file_address_array()[0] = std::make_shared<Block>(next_free_block);
+
 	// 设置用户组
 	inode_new->set_group_id(current_group.get_group_id());
 	// 设置最后修改时间
@@ -456,24 +493,36 @@ inline std::string FileSystem::display_current_directory() const {
 }
 
 inline bool FileSystem::change_current_directory(std::string dir) {
-	Directory dir_tmp;
+	// 得到路径的一个vec
+	auto directories = split_path(dir);
+	// 上一个函数未解析的绝对地址的开头
 	if (dir[0] == '/') {
-		dir_tmp = root_directory;
+		current_directory = root_directory;
 	}
-	auto username = current_user.get_username();
-	// 所有用户的用户目录，在root下
-	auto user_dirs = root_directory.get_children_directories();
-	// 获取当前用户的用户目录
-	auto user_dir = std::find_if(user_dirs.begin(), user_dirs.end(), [username](const std::shared_ptr<Directory> &directory) {return directory->get_name() == username; });
-
-	if (dir[0] == '~') {
-		dir_tmp = *(user_dir->get());
-	}
-	if (dir[0] == '.' && dir[1] == '.') {
-		dir_tmp = *current_directory.get_parent_directory();
-	}
-	// TODO 完成这个函数
+	// 递归处理
+	change_dir(directories, 0, directories.size());
 	return true;
+}
+
+inline void FileSystem::change_dir(std::vector<std::string> dir, int count, int count_size){
+	if (count == count_size) {
+		return;
+	}
+	// dir的每个元素
+	// 如果是上一个目录
+	if (dir[count] == "..") {
+		current_directory = *current_directory.get_parent_directory();
+	} else {
+		// load directory by name
+		auto directory_name = dir[count];
+		auto directorys = current_directory.get_children_directories();
+		auto dir_exits = std::find_if(directorys.begin(), directorys.end(), [directory_name](const std::shared_ptr<Directory> ddd) {return ddd->get_name() == directory_name; });
+		if (dir_exits == directorys.end()) {
+			return;
+		}
+		current_directory = **dir_exits;
+	}
+	change_dir(dir, count + 1, count_size);
 }
 
 inline std::string FileSystem::remove_file(std::string filename) {
@@ -499,7 +548,7 @@ inline std::string FileSystem::remove_file(std::string filename) {
 	files.erase(file_exist);
 	// 删除文件
 	file_set.erase(file_exist);
-	// TODO 回收空间
+
 	std::vector<int> vec;
 	for (auto c : inode.get_file_address_array()) {
 		if (c != nullptr) {
@@ -546,7 +595,6 @@ inline std::string FileSystem::remove_empty_directory(std::string directory_name
 	directories.erase(directory_exist);
 	directory_set.erase(directory_exist);
 
-	// TODO 回收空间
 	std::vector<int> vec;
 	for (auto c : inode.get_file_address_array()) {
 		if (c != nullptr) {
@@ -604,12 +652,28 @@ inline std::string FileSystem::copy_file(std::string filename, std::string filen
 	// 获取inode并生成新inode
 	auto inode = load_inode_by_id(file.get_inode_id());
 	auto inode_new = std::make_shared<INode>(inode);
+
+	// 拷贝inode中的块
+	for (auto i = 0; i < inode.get_file_address_array().size(); ++i) {
+		auto block_tmp = inode.get_file_address_array()[i];
+
+		// 如果捕获的array里面有内容的话，就从block_set的头部擦除空块来放入inode
+		if (block_tmp != nullptr) {
+			auto flag = block_set.begin();
+			auto address = flag->get()->get_address();
+			block_set.erase(flag);
+			block_tmp->set_address(address);
+			inode_new->get_file_address_array()[i] = block_tmp;
+		}
+	}
+
 	// 设置新inode的id
 	inode_new->set_id(inode_set.size() + 1);
 	inode_set.insert(inode_new);
 
-	// TODO add new file
 	auto file_new = std::make_shared<File>(file);
+	file_new->set_file_name(filename_newfile);
+	return "success";
 }
 
 inline std::string FileSystem::link_file(std::string filename, std::string link_name) {
@@ -640,3 +704,6 @@ inline std::string FileSystem::link_file(std::string filename, std::string link_
 
 	return "success";
 }
+
+
+#endif
