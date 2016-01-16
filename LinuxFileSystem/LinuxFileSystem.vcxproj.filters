@@ -59,5 +59,8 @@
     <ClCompile Include="Shell.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="FS_Test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

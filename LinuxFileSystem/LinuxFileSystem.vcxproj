@@ -136,6 +136,7 @@
     <ClInclude Include="Volumn.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="FS_Test.cpp" />
     <ClCompile Include="SetColor.cpp" />
     <ClCompile Include="Shell.cpp" />
     <ClCompile Include="UserInterface.cpp" />

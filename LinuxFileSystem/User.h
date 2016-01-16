@@ -6,8 +6,6 @@
 #include <list>
 #include "INode.h"
 #include <memory>
-#include "File.h"
-#include "Directory.h"
 
 /**
 * ”√ªß¿‡

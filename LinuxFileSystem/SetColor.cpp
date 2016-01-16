@@ -1,5 +1,7 @@
 #include "SetColor.h"
+#include <iostream>
 #include "Windows.h"
+
 
 void set_white() {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
@@ -39,4 +41,12 @@ void set_magenta_high() {
 
 void set_magenta() {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_BLUE);
+}
+
+void set_command() {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
+}
+
+void set_ls_file() {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 5);
 }

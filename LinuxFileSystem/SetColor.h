@@ -13,5 +13,7 @@ void set_red_high();
 void set_color_test();
 void set_magenta_high();
 void set_magenta();
+void set_command();
+void set_ls_file();
 
 #endif
