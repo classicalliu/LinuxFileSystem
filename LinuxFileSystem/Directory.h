@@ -1,4 +1,7 @@
 #pragma once
+
+#ifndef DIRECTORY_H
+#define DIRECTORY_H
 #include <string>
 #include <set>
 #include "File.h"
@@ -73,3 +76,5 @@ inline bool operator==(const Directory& directory1, const Directory& directory2)
 inline bool operator!=(const Directory& directory1, const Directory& directory2) {
 	return !(directory1 == directory2);
 }
+
+#endif

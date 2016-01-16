@@ -1,10 +1,18 @@
-#include "UserInterface.h"
-#include <iostream>
-#include <string>
-#include <ctime>
+#include "Shell.h"
 #include "SetColor.h"
+#include <iostream>
 
-void help() {
+
+Shell::Shell()
+{
+}
+
+
+Shell::~Shell()
+{
+}
+
+void Shell::help() {
 	set_yellow_high();
 	std::cout << "                         帮助文件" << std::endl;
 	std::cout << "                       命令格式说明" << std::endl;
@@ -27,17 +35,17 @@ void help() {
 	std::cout << "16. exit                    -->   退出当前系统" << std::endl;
 }
 
-void start() {
-//	set_magenta();
+void Shell::start() {
+	//	set_magenta();
 	std::cout << "\n\n\n";
 	std::cout << "                  ********************************************" << std::endl;
 	std::cout << "                  *                1. 用户登录                " << std::endl;
 	std::cout << "                  *                2. 用户注册                " << std::endl;
 	std::cout << "                  ********************************************" << std::endl;
-//	set_white();
+	//	set_white();
 }
 
-void user_login() {
+void Shell::user_login() {
 	std::string username;
 	std::string password;
 	std::cout << "\n\n\n";
@@ -49,23 +57,17 @@ void user_login() {
 	std::cout << "                                   请输入密码：              " << std::endl;
 	std::cout << "                                   ";
 	std::cin >> password;
+	auto result = file_system.login(username, password);
+	if (result == "user_not_exist") {
+		set_red_high();
+		std::cout << "                                   用户不存在！              " << std::endl;
+		set_white();
+	}
 }
 
-void test_one() {
-	time_t time_now = time(nullptr);
-	std::string s = ctime(&time_now);
-	std::cout << s << std::endl;
+int main() {
+	Shell shell;
+	shell.user_login();
+	system("pause");
+	return 0;
 }
-
-void test_two() {
-	
-}
-
-//int main() {
-////	help();
-////	start();
-////	set_color_test();
-//	user_login();
-//	system("pause");
-//	return 0;
-//}

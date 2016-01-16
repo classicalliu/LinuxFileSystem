@@ -1,4 +1,6 @@
 #pragma once
+#ifndef FILE_H
+#define FILE_H
 #include <string>
 
 /**
@@ -7,7 +9,6 @@
 */
 class File {
 	// ÎÄ¼þÄÚÈÝ
-	std::string file_content;
 	std::string file_name;
 	short inode_id = 0;
 public:	
@@ -19,8 +20,7 @@ public:
 	}
 
 	File(const File &file)
-		: file_content(file.file_content),
-		file_name(file.file_name),
+		: file_name(file.file_name),
 		inode_id(file.inode_id) {
 	}
 
@@ -41,3 +41,5 @@ public:
 		this->inode_id = inode_id;
 	}
 };
+
+#endif

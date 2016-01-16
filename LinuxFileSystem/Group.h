@@ -1,4 +1,6 @@
 #pragma once
+#ifndef GROUP_H
+#define GROUP_H
 #include <string>
 
 class Group {
@@ -40,3 +42,6 @@ public:
 inline bool operator<(const Group& group1, const Group& group2) {
 	return group1.group_id < group2.group_id;
 }
+
+
+#endif

@@ -1,4 +1,7 @@
 #pragma once
+#ifndef USER_H
+#define USER_H
+
 #include <string>
 #include <list>
 #include "INode.h"
@@ -75,4 +78,12 @@ public:
 //	void set_user_directory_set(const std::set<std::shared_ptr<Directory>>& user_directory_set) {
 //		this->user_directory_set = user_directory_set;
 //	}
+	friend bool operator<(const User &user1, const User &user2);
 };
+
+inline bool operator<(const User& user1, const User& user2) {
+	return user1.username < user2.username;
+}
+
+
+#endif

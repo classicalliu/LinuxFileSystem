@@ -33,9 +33,6 @@
     <ClInclude Include="File.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="FileSystem.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Block.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -45,12 +42,21 @@
     <ClInclude Include="SetColor.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Shell.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FS_Test.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="UserInterface.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="SetColor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Shell.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
