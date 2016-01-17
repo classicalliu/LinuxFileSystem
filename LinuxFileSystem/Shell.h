@@ -22,6 +22,7 @@ public:
 	static std::vector<std::string> split_command(const std::string& command);
 	void show_path() const;
 
+	void hello_window();
 	void error();
 	void help();
 	void start();
@@ -37,7 +38,7 @@ public:
 	void ls_command();
 	void cd_command(std::string path);
 	void passwd_command();
-	void exit_command();
+	static void exit_command();
 	void chmod_command(std::string filename, const int authority);
 	void pwd_command();
 	void chown_command(const std::string &filename, const std::string &username);

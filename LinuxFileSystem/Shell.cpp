@@ -65,7 +65,26 @@ std::vector<std::string> Shell::split_command(const std::string& command) {
 
 void Shell::show_path() const {
 	auto path = file_system.display_current_directory();
-	std::cout << "                  " << path << " -> ";
+	auto username = file_system.get_username();
+	std::string symbol = " $ ";
+	if (username == "root") {
+		symbol = " # ";
+	}
+	std::cout << "                  " << username << " @ " << path << symbol;
+}
+
+void Shell::hello_window() {
+	clear_screen();
+	set_white();
+	std::cout << "\n\n\n";
+	std::cout << "                  ********************************************" << std::endl;
+	std::cout << "                  *                                          *" << std::endl;
+	std::cout << "                  *                Ｏ(≧口≦)Ｏ              *" << std::endl;
+	std::cout << "                  *            欢迎使用XXX文件系统           *" << std::endl;
+	std::cout << "                  *                                          *" << std::endl;
+	std::cout << "                  ********************************************" << std::endl;
+	sleep_second(1.5);
+	start();
 }
 
 void Shell::error() {
@@ -210,43 +229,60 @@ void Shell::user_register() {
 	std::cout << "                                   ";
 	std::cin >> password2;
 	if (password != password2) {
+		clear_screen();
+
+		std::cout << "\n\n\n";
+		std::cout << "                  ********************************************" << std::endl;
 		set_red_high();
 		std::cout << "                                   密码不一致！              " << std::endl;
 		set_white();
+		std::cout << "                  ********************************************" << std::endl;
+
+		pause();
 		user_register();
 		return;
 	}
 	auto result = file_system.user_register(username, password);
 	clear_screen();
 	if (result == "user_already_exist") {
+		clear_screen();
 		set_red_high();
 		std::cout << "\n\n\n";
 		std::cout << "                  ********************************************" << std::endl;
 		std::cout << "                  *                用户已存在                 " << std::endl;
 		std::cout << "                  ********************************************" << std::endl;
 		set_white();
+		pause();
 		user_register();
 	} else if (result == "username_error") {
+		clear_screen();
 		set_red_high();
+		std::cout << "\n\n\n";
 		std::cout << "                  ********************************************" << std::endl;
 		std::cout << "                  *                用户名输入有误             " << std::endl;
 		std::cout << "                  ********************************************" << std::endl;
 		set_white();
+		pause();
 		user_register();
 	} else if (result == "password_error") {
+		clear_screen();
 		set_red_high();
+		std::cout << "\n\n\n";
 		std::cout << "                  ********************************************" << std::endl;
 		std::cout << "                  *                密码输入有误               " << std::endl;
 		std::cout << "                  ********************************************" << std::endl;
 		set_white();
+		pause();
 		user_register();
 	} else {
+		clear_screen();
 		set_yellow_high();
+		std::cout << "\n\n\n";
 		std::cout << "                  ********************************************" << std::endl;
 		std::cout << "                  *                  注册成功                 " << std::endl;
 		std::cout << "                  ********************************************" << std::endl;
 		set_white();
-		pause();
+		sleep_second(1.5);
 		// TODO 跳入下一步
 		start();
 	}
@@ -255,6 +291,9 @@ void Shell::user_register() {
 void Shell::main_window() {
 	clear_screen();
 	std::cout << "\n\n\n";
+	set_yellow_high();
+	std::cout << "                       欢迎使用XXX文件系统_(:зゝ∠)_" << std::endl;
+	set_white();
 	std::cout << "                  ********************************************" << std::endl;
 	sub_window();
 }
@@ -425,7 +464,7 @@ void Shell::ls_command() {
 }
 
 void Shell::cd_command(std::string path) {
-	auto result = file_system.change_current_directory(path);
+	file_system.change_current_directory(path);
 	sub_window();
 }
 

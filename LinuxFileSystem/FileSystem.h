@@ -156,6 +156,8 @@ public:
 
 	static bool umask_command(const std::string& authority);
 
+	std::string get_username() const;
+
 };
 
 //

@@ -2,9 +2,10 @@
 
 int main() {
 	Shell shell;
+	shell.hello_window();
 	//	shell.user_login();
 	//	shell.exit_process();
-	shell.start();
+//	shell.start();
 	//	std::cout << "Hello" << std::endl;
 	//	shell.sleep_second(3);
 	//	shell.clear_screen();
