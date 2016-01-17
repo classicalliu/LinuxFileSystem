@@ -45,7 +45,7 @@
     <ClInclude Include="Shell.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="FS_Test.h">
+    <ClInclude Include="FileSystem.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -59,7 +59,10 @@
     <ClCompile Include="Shell.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="FS_Test.cpp">
+    <ClCompile Include="FileSystem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

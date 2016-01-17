@@ -69,12 +69,23 @@ void Shell::show_path() const {
 }
 
 void Shell::error() {
+	clear_screen();
 	std::cout << "\n\n\n";
 	std::cout << "                  ********************************************" << std::endl;
 	std::cout << "                  *                操作有误                   " << std::endl;
 	std::cout << "                  *                1. 返回                    " << std::endl;
 	std::cout << "                  *                2. 退出                    " << std::endl;
 	std::cout << "                  ********************************************" << std::endl;
+	std::cout << "                                     请选择:  ";
+	std::string command;
+	std::cin >> command;
+	if (command == "1") {
+		start();
+	} else if (command == "2") {
+		exit_process();
+	} else {
+		error();
+	}
 }
 
 void Shell::help() {
@@ -157,18 +168,27 @@ void Shell::user_login() {
 		set_red_high();
 		std::cout << "                                   用户不存在！              " << std::endl;
 		set_white();
+		std::cout << "                  ********************************************" << std::endl;
+		sleep_second(1.5);
+		user_login();
 	} else if (result == "password_not_right") {
 		set_red_high();
 		std::cout << "                                   密码错误！              " << std::endl;
 		set_white();
+		std::cout << "                  ********************************************" << std::endl;
+		sleep_second(1.5);
+		user_login();
 	} else {
 		// result == "success"
 		std::cout << "                                   登录成功！              " << std::endl;
+		set_white();
+		std::cout << "                  ********************************************" << std::endl;
+		sleep_second(1.5);
+		main_window();
 	}
-	std::cout << "                  ********************************************" << std::endl;
-	sleep_second(1.5);
+
+
 	clear_screen();
-	main_window();
 }
 
 void Shell::user_register() {
@@ -301,6 +321,13 @@ void Shell::sub_window() {
 		ln_command(command2, command3);
 	} else if (command1 == "help") {
 		help();
+	} else if (command1 == "cat") {
+		std::cin >> command2 >> command3;
+		cat_command(command2, command3);
+	} else if (command1 == "umask") {
+		int command4;
+		std::cin >> command4;
+		umask_command(command4);
 	}
 }
 
@@ -592,38 +619,32 @@ void Shell::ln_command(const std::string& filename, const std::string& linkname)
 	sub_window();
 }
 
-int main() {
-	Shell shell;
-//	shell.user_login();
-//	shell.exit_process();
-	shell.start();
-//	std::cout << "Hello" << std::endl;
-//	shell.sleep_second(3);
-//	shell.clear_screen();
+void Shell::cat_command(const std::string& filename1, const std::string& filename2) {
+	auto result1 = file_system.display_file_context(filename1);
+	auto result2 = file_system.display_file_context(filename2);
+	show_path();
+	if (result1 == "file_not_exist" || result2 == "file_not_exist") {
+		set_red_high();
+		std::cout << "文件不存在！" << std::endl;
+		set_white();
+	} else {
+		std::cout << result1 << result2 << std::endl;
+	}
+	sub_window();
+}
 
-//	set_command();
-//	std::string s;
-//	std::cin >> s;
-//	set_command();
-//	std::cout << s << std::endl;
-//	system("pause");
-
-//	std::string str;
-//	getline(std::cin, str);
-//	std::cout << str << std::endl;
-//
-
-//	std::string command;
-//	//	std::cin >> commond;
-//	getline(std::cin, command);
-//	//	std::string command1, command2;
-//	//	std::cin >> command1 >> command2;
-//
-//	auto command_vec = shell.split_command(command);
-//
-//	for (auto c : command_vec) {
-//		std::cout << c << std::endl;
-//	}
-//	system("pause");
-	return 0;
+void Shell::umask_command(const int authority) {
+	auto auth = authority_to_string(authority);
+	show_path();
+	set_red_high();
+	if (auth == "error") {
+		std::cout << "权限输入有误！" << std::endl;
+	}
+	else {
+		file_system.umask_command(auth);
+		set_yellow_high();
+		std::cout << "操作成功！" << std::endl;
+	}
+	set_white();
+	sub_window();
 }

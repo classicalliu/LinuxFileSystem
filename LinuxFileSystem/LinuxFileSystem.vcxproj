@@ -126,7 +126,7 @@
     <ClInclude Include="Block.h" />
     <ClInclude Include="Directory.h" />
     <ClInclude Include="File.h" />
-    <ClInclude Include="FS_Test.h" />
+    <ClInclude Include="FileSystem.h" />
     <ClInclude Include="Group.h" />
     <ClInclude Include="INode.h" />
     <ClInclude Include="SetColor.h" />
@@ -136,7 +136,8 @@
     <ClInclude Include="Volumn.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FS_Test.cpp" />
+    <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="SetColor.cpp" />
     <ClCompile Include="Shell.cpp" />
     <ClCompile Include="UserInterface.cpp" />

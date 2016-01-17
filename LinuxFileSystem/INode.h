@@ -14,7 +14,7 @@ class INode {
 	// 文件链接计数
 	int count = 1;
 	// 文件地址块数组,4个直接块
-		std::array<std::shared_ptr<Block>, 6> file_address_array;
+	std::array<std::shared_ptr<Block>, 6> file_address_array;
 		// TODO 设置两个间接地址
 //	std::tuple<std::shared_ptr<Block>, std::shared_ptr<Block>, std::shared_ptr<Block>, std::shared_ptr<Block>, 
 //		std::shared_ptr<std::shared_ptr<Block>>, 

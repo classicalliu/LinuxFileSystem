@@ -1,7 +1,7 @@
 #pragma once
 #ifndef SHELL_H
 #define SHELL_H
-#include "FS_Test.h"
+#include "FileSystem.h"
 
 class Shell
 {
@@ -47,6 +47,9 @@ public:
 	void rm_command(const std::string &filename);
 	void rmdir_command(const std::string &dir_name);
 	void ln_command(const std::string &filename, const std::string &linkname);
+	void cat_command(const std::string &filename1, const std::string& filename2);
+	void umask_command(const int authority);
+	// TODO ls -l command
 };
 
 #endif
