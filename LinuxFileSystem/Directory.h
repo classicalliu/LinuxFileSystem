@@ -26,10 +26,11 @@ public:
 	Directory() {
 	}
 
-	Directory(const std::string& name, Directory* const parent_directory, const short inode_id)
+
+	Directory(const std::string& name, const std::shared_ptr<Directory>& parent_directory, const short inode_id)
 		: name(name),
 		  parent_directory(parent_directory),
-		  inode_id(inode_id){
+		  inode_id(inode_id) {
 	}
 
 	std::set<std::shared_ptr<Directory>>& get_children_directories() {

@@ -64,6 +64,7 @@ std::vector<std::string> Shell::split_command(const std::string& command) {
 }
 
 void Shell::show_path() const {
+	set_command();
 	auto path = file_system.display_current_directory();
 	auto username = file_system.get_username();
 	std::string symbol = " $ ";
@@ -71,6 +72,7 @@ void Shell::show_path() const {
 		symbol = " # ";
 	}
 	std::cout << "                  " << username << " @ " << path << symbol;
+	set_white();
 }
 
 void Shell::hello_window() {
@@ -305,9 +307,9 @@ void Shell::sub_window() {
 //	getchar();
 //	getline(std::cin, command);
 	std::string command1, command2, command3;
-	set_command();
+//	set_command();
 	std::cin >> command1;
-	set_white();
+//	set_white();
 
 //	auto command_vec = split_command(command);
 //	if (command_vec[0] == "mk") {

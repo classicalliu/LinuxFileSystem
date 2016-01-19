@@ -38,9 +38,9 @@ class FileSystem {
 	// 记录所有的inode
 	std::set<std::shared_ptr<INode>> inode_set;
 	// 记录所有的目录的实体
-	std::set<std::shared_ptr<Directory>> directory_set;
+//	std::set<std::shared_ptr<Directory>> directory_set;
 	//记录所有文件的实体
-	std::set<std::shared_ptr<File>> file_set;
+//	std::set<std::shared_ptr<File>> file_set;
 	// 根目录
 	std::shared_ptr<Directory> root_directory;
 	//	std::shared_ptr<Directory> root_directory;
@@ -67,15 +67,15 @@ public:
 	void init();
 
 	// 检测用户是否存在
-	bool check_username(std::string username);
+	bool check_username(const std::string& username);
 	// 在用户已经存在的前提下检测密码是否正确
-	bool check_password(std::string password) const;
+	bool check_password(const std::string& password) const;
 	// 检测文件是否已经存在
-	bool check_file_exist(std::string filename) const;
+	bool check_file_exist(const std::string& filename) const;
 	// 检测文件夹是否已经存在
-	bool check_directory_exist(std::string directory_name) const;
+	bool check_directory_exist(const std::string& directory_name) const;
 
-	bool check_authority(std::string authority);
+//	bool check_authority(const std::string& authority);
 
 	static std::vector<std::string> split_path(const std::string &path);
 
@@ -85,7 +85,7 @@ public:
 	* 然后检测用户密码是否匹配，不匹配就返回错误信息
 	* 检测通过则返回成功信息
 	*/
-	std::string login(std::string username, std::string password);
+	std::string login(const std::string& username, const std::string& password);
 
 	/**
 	* 用户注册
@@ -95,7 +95,7 @@ public:
 	* 设置用户信息，组为当前组
 	* 返回注册成功信息
 	*/
-	std::string user_register(std::string username, std::string password);
+	std::string user_register(const std::string& username, const std::string& password);
 
 	/**
 	* 根据当前用户组id找出用户
@@ -107,52 +107,54 @@ public:
 	/**
 	* 创建新文件
 	*/
-	std::string new_file(std::string filename);
+	std::string new_file(const std::string& filename);
+	// TODO vi command
+	std::string new_file_with_content(const std::string& filename, const std::string& content);
 
 	// 创建新文件夹
-	std::string new_directory(std::string directory_name);
+	std::string new_directory(const std::string& directory_name);
 
 	// ls命令显示当前的文件和文件夹的名字
 	std::pair<std::vector<std::string>, std::vector<std::string>> list_names() const;
 
 	// 修改密码
-	bool change_password(std::string password) const;
+	bool change_password(const std::string& password) const;
 
 	// 修改用户权限，输入string 例如777表示用户，组，其他用户
 	// 确保输入的是一个三位的数字
 	// 检测工作在上一层完成
-	bool change_mode(std::string filename, std::string authority);
+	bool change_mode(const std::string& filename, const std::string& authority);
 
 	// 修改文件用户
-	std::string change_file_user(std::string filename, std::string username);
+	std::string change_file_user(const std::string& filename, const std::string& username);
 
 	// 修改文件组
-	std::string change_file_group(std::string filename, std::string group);
+	std::string change_file_group(const std::string& filename, const std::string& group);
 	// 显示当前目录
 	std::string display_current_directory() const;
 	// 改变当前目录
-	bool change_current_directory(std::string dir);
-	void change_dir(std::vector<std::string> dir, int count, int count_size);
+	bool change_current_directory(const std::string& dir);
+	void change_dir(const std::vector<std::string>& dir, const int count, const int count_size);
 
 	// 删除文件
-	std::string remove_file(std::string filename);
+	std::string remove_file(const std::string& filename);
 
 	// 删除文件夹rm -rf
-	std::string remove_directory(std::string dirctory_name);
+	std::string remove_directory(const std::string& dirctory_name);
 	// 删除空文件夹 rmdir
-	std::string remove_empty_directory(std::string directory_name);
+	std::string remove_empty_directory(const std::string& directory_name);
 
 	// mv命令，重命名文件
-	std::string rename_file(std::string filename_old, std::string filename_new) const;
+	std::string rename_file(const std::string& filename_old, const std::string& filename_new) const;
 
 	// cp 命令，拷贝文件,旧文件，新文件名，只要名字，不要路径，简单实现
-	std::string copy_file(std::string filename, std::string filename_newfile);
+	std::string copy_file(const std::string& filename, const std::string& filename_newfile);
 
 	// ln命令，建立文件链接
-	std::string link_file(std::string filename, std::string link_name);
+	std::string link_file(const std::string& filename, const std::string& link_name);
 
 	//cat 命令
-	std::string display_file_context(std::string filename);
+	std::string display_file_context(const std::string& filename);
 
 	static bool umask_command(const std::string& authority);
 
