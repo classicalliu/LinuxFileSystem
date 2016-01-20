@@ -74,15 +74,17 @@ void Shell::show_path() const {
 
 void Shell::hello_window() {
 	clear_screen();
-	set_white();
+	set_yellow();
 	std::cout << "\n\n\n";
 	std::cout << "                  ********************************************" << std::endl;
 	std::cout << "                  *                                          *" << std::endl;
 	std::cout << "                  *                Ｏ(≧口≦)Ｏ              *" << std::endl;
-	std::cout << "                  *            欢迎使用XXX文件系统           *" << std::endl;
+	std::cout << "                  *            欢迎使用山寨文件系统           *" << std::endl;
 	std::cout << "                  *                                          *" << std::endl;
 	std::cout << "                  ********************************************" << std::endl;
+	set_white();
 	sleep_second(1.5);
+
 	start();
 }
 
@@ -115,21 +117,24 @@ void Shell::help() {
 	std::cout << "                       命令格式说明" << std::endl;
 	set_white();
 	std::cout << " 1. ls                      -->   列出当前目录中的子目录和文件" << std::endl;
-	std::cout << " 2. chmod xxx               -->   xxx为1-7之间的数字，表示用户权限" << std::endl;
-	std::cout << " 3. chgrp <name>            -->   改变当前文件的目录" << std::endl;
-	std::cout << " 4. psw                     -->   显示当前目录" << std::endl;
-	std::cout << " 5. cd <name>               -->   跳转到目录<name>， ..表示上层目录，/表示根目录，~表示home目录" << std::endl;
-	std::cout << " 6. mkdir <name>            -->   在当前目录下创建子目录" << std::endl;
-	std::cout << " 7. rmdir <name>            -->   删除子目录<name>" << std::endl;
-	std::cout << " 8. umask <name>            -->   创建文件屏蔽码" << std::endl;
-	std::cout << " 9. mv <source> <target>    -->   将文件从<source>移动到<target>" << std::endl;
-	std::cout << "10. cp <source> <target>    -->   将文件从<source>移动到<target>" << std::endl;
-	std::cout << "11. rm <name>               -->   删除文件名为<name>的文件" << std::endl;
-	std::cout << "12. ln <source>             -->   将文件从<source>链接到当前文件夹" << std::endl;
-	std::cout << "13. cat <name1> <name2> ... -->   连接显示文件内容" << std::endl;
-	std::cout << "14. passwd                  -->   修改当前用户密码" << std::endl;
-	std::cout << "15. help                    -->   显示帮助文件" << std::endl;
-	std::cout << "16. exit                    -->   退出当前系统" << std::endl;
+	std::cout << " 2. ls-l <name>             -->   列出<name>的详细信息" << std::endl;
+	std::cout << " 3. ls-L                    -->   列出当前目录中所有的文件和子目录的信息" << std::endl;
+	std::cout << " 4. chmod xxx               -->   xxx为1-7之间的数字，表示用户权限" << std::endl;
+	std::cout << " 5. chgrp <name>            -->   改变当前文件的目录" << std::endl;
+	std::cout << " 6. psw                     -->   显示当前目录" << std::endl;
+	std::cout << " 7. cd <name>               -->   跳转到目录<name>， ..表示上层目录，/表示根目录，~表示home目录" << std::endl;
+	std::cout << " 8. mkdir <name>            -->   在当前目录下创建子目录" << std::endl;
+	std::cout << " 9. rmdir <name>            -->   删除子目录<name>" << std::endl;
+	std::cout << "10. umask <name>            -->   创建文件屏蔽码" << std::endl;
+	std::cout << "11. mv <source> <target>    -->   将文件从<source>移动到<target>" << std::endl;
+	std::cout << "12. cp <source> <target>    -->   将文件从<source>移动到<target>" << std::endl;
+	std::cout << "13. rm <name>               -->   删除文件名为<name>的文件" << std::endl;
+	std::cout << "14. ln <source>             -->   将文件从<source>链接到当前文件夹" << std::endl;
+	std::cout << "15. cat <name1> <name2> ... -->   连接显示文件内容" << std::endl;
+	std::cout << "16. passwd                  -->   修改当前用户密码" << std::endl;
+	std::cout << "17. vi <filename>           -->   创建名为<filename>的文件，进入vi编辑界面，输入exit退出" << std::endl;
+	std::cout << "18. help                    -->   显示帮助文件" << std::endl;
+	std::cout << "19. exit                    -->   退出当前系统" << std::endl;
 	pause();
 	main_window();
 }
@@ -330,17 +335,14 @@ void Shell::sub_window() {
 		mk_command(command2);
 	}
 	else if (command1 == "ls") {
-		if (std::cin >> command2 && command2 == "-l") {
-			if (std::cin >> command3) {
-				ls_l_file_command(command3);
-			}
-			else {
-				ls_l_command();
-			}
-		}
-		else {
-			ls_command();
-		}
+		ls_command();
+	}
+	else if (command1 == "ls-l") {
+		std::cin >> command2;
+		ls_l_file_command(command2);
+	}
+	else if (command1 == "ls-L") {
+		ls_l_command();
 	}
 	else if (command1 == "mkdir") {
 		std::cin >> command2;
@@ -824,7 +826,7 @@ void Shell::ls_l_file_command(const std::string& filename) {
 		std::cout << "文件不存在！" << std::endl;
 	}
 	else {
-		std::cout << result << std::endl;
+		std::cout << result;
 	}
 	sub_window();
 }
@@ -833,7 +835,7 @@ void Shell::ls_l_command() {
 	auto result = file_system.list_all_file_details();
 	for (const auto& c : result) {
 		show_path();
-		std::cout << c << std::endl;
+		std::cout << c;
 	}
 	sub_window();
 }

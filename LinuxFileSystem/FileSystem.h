@@ -151,6 +151,7 @@ public:
 	std::string get_username() const;
 
 	std::string list_file_details(const std::string& filename);
+	std::string list_directory_details(const std::string& directory_name);
 	std::vector<std::string> list_all_file_details();
 
 };
