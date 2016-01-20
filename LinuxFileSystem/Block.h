@@ -1,13 +1,10 @@
 #pragma once
 #ifndef BLOCK_H
 #define BLOCK_H
+#include <string>
+
 // 块结构
 // 空闲块或者文件块
-
-
-//namespace init_block {
-//	std::string content = "the file init";
-//}
 
 namespace init_block {
 	static std::string content = "the file init";
@@ -20,45 +17,24 @@ class Block {
 public:
 	static const int SIZE = 512;
 
-	Block(const int address)
-		: address(address) {
-	}
+	Block(const int address);
 
-	Block(const Block &block)
-		: address(address),
-		content(content) {
-	}
+	Block(const Block& block);
 
-	const int& get_address() const {
-		return address;
-	}
+	const int& get_address() const;
 
-	void set_address(const int address) {
-		this->address = address;
-	}
+	void set_address(const int address);
 
+	const std::string& get_content() const;
 
-	const std::string& get_content() const {
-		return content;
-	}
-
-	void set_content(const std::string& content) {
-		this->content = content;
-	}
+	void set_content(const std::string& content);
 
 	Block& operator=(const Block &block);
 
 	friend bool operator<(const Block &block1, const Block &block2);
 };
 
-inline Block& Block::operator=(const Block& block) {
-	address = block.address;
-	content = block.content;
-	return *this;
-}
+bool operator<(const Block &block1, const Block &block2);
 
-inline bool operator<(const Block& block1, const Block& block2) {
-	return block1.address < block2.address;
-}
 
 #endif

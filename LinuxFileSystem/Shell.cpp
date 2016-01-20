@@ -294,7 +294,7 @@ void Shell::main_window() {
 	clear_screen();
 	std::cout << "\n\n\n";
 	set_yellow_high();
-	std::cout << "                       欢迎使用XXX文件系统_(:зゝ∠)_" << std::endl;
+	std::cout << "                       欢迎使用山寨文件系统_(:зゝ∠)_" << std::endl;
 	set_white();
 	std::cout << "                  ********************************************" << std::endl;
 	sub_window();
@@ -306,7 +306,7 @@ void Shell::sub_window() {
 	//	std::cin >> commond;
 //	getchar();
 //	getline(std::cin, command);
-	std::string command1, command2, command3;
+	std::string command1 = "", command2 = "", command3 = "";
 //	set_command();
 	std::cin >> command1;
 //	set_white();
@@ -321,8 +321,16 @@ void Shell::sub_window() {
 	if (command1 == "mk") {
 		std::cin >> command2;
 		mk_command(command2);
-	} else if (command1 == "ls") {
-		ls_command();
+	}  else if (command1 == "ls") {
+		if (std::cin >> command2 && command2 == "-l") {
+			if (std::cin >> command3) {
+				ls_l_file_command(command3);
+			} else {
+				ls_l_command();
+			}
+		} else {
+			ls_command();
+		}
 	} else if (command1 == "mkdir") {
 		std::cin >> command2;
 		mkdir_command(command2);
@@ -369,6 +377,31 @@ void Shell::sub_window() {
 		int command4;
 		std::cin >> command4;
 		umask_command(command4);
+	} else if (command1 == "vi") {
+		// command2 是文件名
+		std::cin >> command2;
+		vi_windows();
+		std::vector<std::string> vec_tmp;
+		std::string content_tmp;
+		while(std::cin >> content_tmp) {
+			if (content_tmp == "exit") {
+				break;
+			}
+			vec_tmp.push_back(content_tmp);
+		}
+		clear_screen();
+		std::cout << "\n\n\n";
+		set_yellow_high();
+		std::cout << "                       欢迎使用山寨文件系统_(:зゝ∠)_" << std::endl;
+		set_white();
+		std::cout << "                  ********************************************" << std::endl;
+		vi_command(command2, vec_tmp);
+	} else {
+		show_path();
+		set_red_high();
+		std::cout << "没有此命令！" << std::endl;
+		set_white();
+		sub_window();
 	}
 }
 
@@ -687,5 +720,62 @@ void Shell::umask_command(const int authority) {
 		std::cout << "操作成功！" << std::endl;
 	}
 	set_white();
+	sub_window();
+}
+
+void Shell::vi_command(const std::string& filename, const std::vector<std::string>& content_vec) {
+	std::string content_str = "";
+	for (const auto &c : content_vec) {
+		content_str += c;
+	}
+
+	auto result = file_system.new_file_with_content(filename, content_str);
+	show_path();
+	set_red_high();
+	if (result == "file_already_exist") {
+		std::cout << "文件已存在！" << std::endl;
+	}
+	else if (result == "filename_error") {
+		std::cout << "文件名有误！" << std::endl;
+	}
+	else if (result == "no_space") {
+		std::cout << "空间不足！" << std::endl;
+	}
+	else {
+		set_yellow_high();
+		std::cout << "操作成功" << std::endl;
+	}
+	set_white();
+	sub_window();
+}
+
+void Shell::vi_windows() {
+	clear_screen();
+	std::cout << "\n\n\n";
+	set_yellow_high();
+	std::cout << "                       欢迎使用山寨vi编辑器_(:зゝ∠)_" << std::endl;
+	set_white();
+	std::cout << "                  ********************************************" << std::endl;
+	std::cout << "                  ";
+}
+
+void Shell::ls_l_file_command(const std::string& filename) {
+	auto result = file_system.list_file_details(filename);
+	show_path();
+	if (result == "file_not_exist") {
+		set_red_high();
+		std::cout << "文件不存在！" << std::endl;
+	} else {
+		std::cout << result << std::endl;
+	}
+	sub_window();
+}
+
+void Shell::ls_l_command() {
+	auto result = file_system.list_all_file_details();
+	for (const auto &c : result) {
+		show_path();
+		std::cout << c << std::endl;
+	}
 	sub_window();
 }

@@ -14,32 +14,18 @@ class File {
 public:	
 	static const int SIZE = 512;
 
-	File(const std::string& file_name, const short inode_id)
-		: file_name(file_name),
-		inode_id(inode_id) {
-	}
+	File(const std::string& file_name, const short inode_id);
 
-	File(const File &file)
-		: file_name(file.file_name),
-		inode_id(file.inode_id) {
-	}
+	File(const File& file);
 
 
-	const std::string& get_file_name() const {
-		return file_name;
-	}
+	const std::string& get_file_name() const;
 
-	void set_file_name(const std::string& file_name) {
-		this->file_name = file_name;
-	}
+	void set_file_name(const std::string& file_name);
 
-	const short& get_inode_id() const {
-		return inode_id;
-	}
+	const short& get_inode_id() const;
 
-	void set_inode_id(const short inode_id) {
-		this->inode_id = inode_id;
-	}
+	void set_inode_id(const short inode_id);
 };
 
 #endif

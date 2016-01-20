@@ -132,15 +132,18 @@
     <ClInclude Include="SetColor.h" />
     <ClInclude Include="Shell.h" />
     <ClInclude Include="User.h" />
-    <ClInclude Include="UserInterface.h" />
-    <ClInclude Include="Volumn.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Block.cpp" />
+    <ClCompile Include="Directory.cpp" />
+    <ClCompile Include="File.cpp" />
     <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="Group.cpp" />
+    <ClCompile Include="INode.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SetColor.cpp" />
     <ClCompile Include="Shell.cpp" />
-    <ClCompile Include="UserInterface.cpp" />
+    <ClCompile Include="User.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

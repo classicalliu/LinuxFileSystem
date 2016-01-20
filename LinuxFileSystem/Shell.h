@@ -50,7 +50,11 @@ public:
 	void ln_command(const std::string &filename, const std::string &linkname);
 	void cat_command(const std::string &filename1, const std::string& filename2);
 	void umask_command(const int authority);
+	void vi_command(const std::string& filename, const std::vector<std::string>& content_vec);
+	void vi_windows();
 	// TODO ls -l command
+	void ls_l_file_command(const std::string& filename);
+	void ls_l_command();
 };
 
 #endif

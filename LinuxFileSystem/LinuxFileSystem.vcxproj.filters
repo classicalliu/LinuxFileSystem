@@ -21,9 +21,6 @@
     <ClInclude Include="INode.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Volumn.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Group.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -34,9 +31,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Block.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="UserInterface.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="SetColor.h">
@@ -50,9 +44,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="UserInterface.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="SetColor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -63,6 +54,24 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="User.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="INode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="File.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Group.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Block.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Directory.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
