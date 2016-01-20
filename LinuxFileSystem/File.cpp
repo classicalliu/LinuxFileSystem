@@ -23,3 +23,4 @@ const short& File::get_inode_id() const {
 void File::set_inode_id(const short inode_id) {
 	this->inode_id = inode_id;
 }
+

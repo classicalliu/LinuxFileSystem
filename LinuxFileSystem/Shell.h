@@ -3,8 +3,7 @@
 #define SHELL_H
 #include "FileSystem.h"
 
-class Shell
-{
+class Shell {
 	FileSystem file_system;
 public:
 	Shell();
@@ -41,14 +40,14 @@ public:
 	static void exit_command();
 	void chmod_command(std::string filename, const int authority);
 	void pwd_command();
-	void chown_command(const std::string &filename, const std::string &username);
-	void chgrp_command(const std::string &filename, const std::string &group_name);
-	void mv_command(const std::string &filename_old, const std::string &filename_new);
-	void cp_command(const std::string &filename_old, const std::string &filename_new);
-	void rm_command(const std::string &filename);
-	void rmdir_command(const std::string &dir_name);
-	void ln_command(const std::string &filename, const std::string &linkname);
-	void cat_command(const std::string &filename1, const std::string& filename2);
+	void chown_command(const std::string& filename, const std::string& username);
+	void chgrp_command(const std::string& filename, const std::string& group_name);
+	void mv_command(const std::string& filename_old, const std::string& filename_new);
+	void cp_command(const std::string& filename_old, const std::string& filename_new);
+	void rm_command(const std::string& filename);
+	void rmdir_command(const std::string& dir_name);
+	void ln_command(const std::string& filename, const std::string& linkname);
+	void cat_command(const std::string& filename1, const std::string& filename2);
 	void umask_command(const int authority);
 	void vi_command(const std::string& filename, const std::vector<std::string>& content_vec);
 	void vi_windows();
@@ -58,3 +57,4 @@ public:
 };
 
 #endif
+

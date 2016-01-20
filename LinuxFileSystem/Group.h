@@ -22,10 +22,11 @@ public:
 
 	void set_group_name(std::string group_name);
 
-	friend bool operator<(const Group &group1, const Group &group2);
+	friend bool operator<(const Group& group1, const Group& group2);
 };
 
-bool operator<(const Group &group1, const Group &group2);
+bool operator<(const Group& group1, const Group& group2);
 
 
 #endif
+

@@ -2,9 +2,9 @@
 
 
 INode::INode(const short id, const int size, const int group_id, const std::string& username) : id(id),
-size(size),
-group_id(group_id),
-username(username) {
+                                                                                                size(size),
+                                                                                                group_id(group_id),
+                                                                                                username(username) {
 	// last_modify_time 设置为当前时间
 	auto time_now = time(nullptr);
 	last_modify_time = time_now;
@@ -92,3 +92,4 @@ void INode::set_username(const std::string& username) {
 bool operator<(const INode& inode1, const INode& inode2) {
 	return inode1.id < inode2.id;
 }
+

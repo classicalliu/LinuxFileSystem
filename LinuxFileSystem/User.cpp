@@ -1,10 +1,12 @@
 #include "User.h"
 
 
+User::User() {
+}
 
 User::User(const std::string& username, const std::string& password, int groud_id) : username(username),
-password(password),
-group_id(groud_id) {
+                                                                                     password(password),
+                                                                                     group_id(groud_id) {
 }
 
 const std::string& User::get_username() const {
@@ -34,3 +36,4 @@ void User::set_group_id(const int group_id) {
 bool operator<(const User& user1, const User& user2) {
 	return user1.username < user2.username;
 }
+

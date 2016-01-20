@@ -50,3 +50,4 @@ void set_command() {
 void set_ls_file() {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 5);
 }
+

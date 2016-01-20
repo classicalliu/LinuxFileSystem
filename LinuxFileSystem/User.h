@@ -21,10 +21,7 @@ class User {
 	// 用户打开的文件列表的指针
 	std::list<std::shared_ptr<INode>> user_open_file_list;
 public:
-
-
-	User() {
-	}
+	User();
 
 	User(const std::string& username, const std::string& password, int groud_id);
 
@@ -40,10 +37,11 @@ public:
 
 	void set_group_id(const int group_id);
 
-	friend bool operator<(const User &user1, const User &user2);
+	friend bool operator<(const User& user1, const User& user2);
 };
 
-bool operator<(const User &user1, const User &user2);
+bool operator<(const User& user1, const User& user2);
 
 
 #endif
+

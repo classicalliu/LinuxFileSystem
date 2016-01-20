@@ -11,7 +11,7 @@ class File {
 	// ÎÄ¼şÄÚÈİ
 	std::string file_name;
 	short inode_id = 0;
-public:	
+public:
 	static const int SIZE = 512;
 
 	File(const std::string& file_name, const short inode_id);
@@ -29,3 +29,4 @@ public:
 };
 
 #endif
+

@@ -5,13 +5,11 @@
 #include <thread>
 
 
-Shell::Shell()
-{
+Shell::Shell() {
 }
 
 
-Shell::~Shell()
-{
+Shell::~Shell() {
 }
 
 void Shell::pause() {
@@ -44,8 +42,7 @@ std::vector<std::string> Shell::split_command(const std::string& command) {
 	std::string::size_type pos1, pos2;
 	pos2 = command.find(c);
 	pos1 = 0;
-	while (std::string::npos != pos2)
-	{
+	while (std::string::npos != pos2) {
 		result.push_back(command.substr(pos1, pos2 - pos1));
 
 		pos1 = pos2 + c.size();
@@ -55,7 +52,7 @@ std::vector<std::string> Shell::split_command(const std::string& command) {
 		result.push_back(command.substr(pos1));
 
 	std::vector<std::string> result2;
-	for (const auto &tmp : result) {
+	for (const auto& tmp : result) {
 		if (tmp != "") {
 			result2.push_back(tmp);
 		}
@@ -102,9 +99,11 @@ void Shell::error() {
 	std::cin >> command;
 	if (command == "1") {
 		start();
-	} else if (command == "2") {
+	}
+	else if (command == "2") {
 		exit_process();
-	} else {
+	}
+	else {
 		error();
 	}
 }
@@ -153,16 +152,19 @@ void Shell::start() {
 	if (choice == "1") {
 		clear_screen();
 		user_login();
-	} else if (choice == "2") {
+	}
+	else if (choice == "2") {
 		clear_screen();
 		user_register();
-	} else {
+	}
+	else {
 		error();
 		std::cin >> choice;
 		trim(choice);
 		if (choice == "1") {
 			start();
-		} else {
+		}
+		else {
 			exit_process();
 		}
 	}
@@ -183,7 +185,7 @@ void Shell::user_login() {
 	std::cout << "                                   ";
 	std::cin >> password;
 	auto result = file_system.login(username, password);
-	
+
 	std::cout << "\n\n\n";
 	if (result == "user_not_exist") {
 		set_red_high();
@@ -192,14 +194,16 @@ void Shell::user_login() {
 		std::cout << "                  ********************************************" << std::endl;
 		sleep_second(1.5);
 		user_login();
-	} else if (result == "password_not_right") {
+	}
+	else if (result == "password_not_right") {
 		set_red_high();
 		std::cout << "                                   密码错误！              " << std::endl;
 		set_white();
 		std::cout << "                  ********************************************" << std::endl;
 		sleep_second(1.5);
 		user_login();
-	} else {
+	}
+	else {
 		// result == "success"
 		std::cout << "                                   登录成功！              " << std::endl;
 		set_white();
@@ -256,7 +260,8 @@ void Shell::user_register() {
 		set_white();
 		pause();
 		user_register();
-	} else if (result == "username_error") {
+	}
+	else if (result == "username_error") {
 		clear_screen();
 		set_red_high();
 		std::cout << "\n\n\n";
@@ -266,7 +271,8 @@ void Shell::user_register() {
 		set_white();
 		pause();
 		user_register();
-	} else if (result == "password_error") {
+	}
+	else if (result == "password_error") {
 		clear_screen();
 		set_red_high();
 		std::cout << "\n\n\n";
@@ -276,7 +282,8 @@ void Shell::user_register() {
 		set_white();
 		pause();
 		user_register();
-	} else {
+	}
+	else {
 		clear_screen();
 		set_yellow_high();
 		std::cout << "\n\n\n";
@@ -302,88 +309,108 @@ void Shell::main_window() {
 
 void Shell::sub_window() {
 	show_path();
-//	std::string command;
+	//	std::string command;
 	//	std::cin >> commond;
-//	getchar();
-//	getline(std::cin, command);
+	//	getchar();
+	//	getline(std::cin, command);
 	std::string command1 = "", command2 = "", command3 = "";
-//	set_command();
+	//	set_command();
 	std::cin >> command1;
-//	set_white();
+	//	set_white();
 
-//	auto command_vec = split_command(command);
-//	if (command_vec[0] == "mk") {
-//		mk_command(command_vec[1]);
-//	} else if (command_vec[0] == "ls") {
-//		ls_command();
-//	}
+	//	auto command_vec = split_command(command);
+	//	if (command_vec[0] == "mk") {
+	//		mk_command(command_vec[1]);
+	//	} else if (command_vec[0] == "ls") {
+	//		ls_command();
+	//	}
 
 	if (command1 == "mk") {
 		std::cin >> command2;
 		mk_command(command2);
-	}  else if (command1 == "ls") {
+	}
+	else if (command1 == "ls") {
 		if (std::cin >> command2 && command2 == "-l") {
 			if (std::cin >> command3) {
 				ls_l_file_command(command3);
-			} else {
+			}
+			else {
 				ls_l_command();
 			}
-		} else {
+		}
+		else {
 			ls_command();
 		}
-	} else if (command1 == "mkdir") {
+	}
+	else if (command1 == "mkdir") {
 		std::cin >> command2;
 		mkdir_command(command2);
-	} else if (command1 == "cd") {
+	}
+	else if (command1 == "cd") {
 		std::cin >> command2;
 		cd_command(command2);
-	} else if (command1 == "passwd") {
+	}
+	else if (command1 == "passwd") {
 		passwd_command();
-	} else if (command1 == "exit") {
+	}
+	else if (command1 == "exit") {
 		exit_command();
-	} else if (command1 == "chmod") {
+	}
+	else if (command1 == "chmod") {
 		int command4;
 		std::cin >> command2 >> command4;
 		chmod_command(command2, command4);
-	} else if (command1 == "pwd") {
+	}
+	else if (command1 == "pwd") {
 		pwd_command();
-	} else if (command1 == "chown") {
+	}
+	else if (command1 == "chown") {
 		std::cin >> command2 >> command3;
 		chown_command(command2, command3);
-	} else if (command1 == "chgrp") {
+	}
+	else if (command1 == "chgrp") {
 		std::cin >> command2 >> command3;
 		chgrp_command(command2, command3);
-	} else if (command1 == "mv") {
+	}
+	else if (command1 == "mv") {
 		std::cin >> command2 >> command3;
 		mv_command(command2, command3);
-	} else if (command1 == "cp") {
+	}
+	else if (command1 == "cp") {
 		std::cin >> command2 >> command3;
 		cp_command(command2, command3);
-	} else if (command1 == "rm") {
+	}
+	else if (command1 == "rm") {
 		std::cin >> command2;
 		rm_command(command2);
-	} else if (command1 == "rmdir") {
+	}
+	else if (command1 == "rmdir") {
 		std::cin >> command2;
 		rmdir_command(command2);
-	} else if (command1 == "ln") {
+	}
+	else if (command1 == "ln") {
 		std::cin >> command2 >> command3;
 		ln_command(command2, command3);
-	} else if (command1 == "help") {
+	}
+	else if (command1 == "help") {
 		help();
-	} else if (command1 == "cat") {
+	}
+	else if (command1 == "cat") {
 		std::cin >> command2 >> command3;
 		cat_command(command2, command3);
-	} else if (command1 == "umask") {
+	}
+	else if (command1 == "umask") {
 		int command4;
 		std::cin >> command4;
 		umask_command(command4);
-	} else if (command1 == "vi") {
+	}
+	else if (command1 == "vi") {
 		// command2 是文件名
 		std::cin >> command2;
 		vi_windows();
 		std::vector<std::string> vec_tmp;
 		std::string content_tmp;
-		while(std::cin >> content_tmp) {
+		while (std::cin >> content_tmp) {
 			if (content_tmp == "exit") {
 				break;
 			}
@@ -396,7 +423,8 @@ void Shell::sub_window() {
 		set_white();
 		std::cout << "                  ********************************************" << std::endl;
 		vi_command(command2, vec_tmp);
-	} else {
+	}
+	else {
 		show_path();
 		set_red_high();
 		std::cout << "没有此命令！" << std::endl;
@@ -426,19 +454,26 @@ std::string Shell::to_binary(const int num) {
 	std::string result;
 	if (num == 7) {
 		result = "111";
-	} else if (num == 6) {
+	}
+	else if (num == 6) {
 		result = "110";
-	} else if (num == 5) {
+	}
+	else if (num == 5) {
 		result = "101";
-	} else if (num == 4) {
+	}
+	else if (num == 4) {
 		result = "100";
-	} else if (num == 3) {
+	}
+	else if (num == 3) {
 		result = "011";
-	} else if (num == 2) {
+	}
+	else if (num == 2) {
 		result = "010";
-	} else if (num == 1) {
+	}
+	else if (num == 1) {
 		result = "001";
-	} else if (num == 0) {
+	}
+	else if (num == 0) {
 		result = "000";
 	}
 	return result;
@@ -450,11 +485,14 @@ void Shell::mk_command(std::string filename) {
 	set_red_high();
 	if (result == "file_already_exist") {
 		std::cout << "文件已存在！" << std::endl;
-	} else if (result == "filename_error") {
+	}
+	else if (result == "filename_error") {
 		std::cout << "文件名有误！" << std::endl;
-	} else if (result == "no_space") {
+	}
+	else if (result == "no_space") {
 		std::cout << "空间不足！" << std::endl;
-	} else {
+	}
+	else {
 		set_yellow_high();
 		std::cout << "操作成功" << std::endl;
 	}
@@ -468,11 +506,14 @@ void Shell::mkdir_command(std::string dir_name) {
 	set_red_high();
 	if (result == "directory_already_exist") {
 		std::cout << "文件夹已存在！" << std::endl;
-	} else if (result == "directory_error") {
+	}
+	else if (result == "directory_error") {
 		std::cout << "文件夹名有误！" << std::endl;
-	} else if (result == "no_space") {
+	}
+	else if (result == "no_space") {
 		std::cout << "空间不足！" << std::endl;
-	} else {
+	}
+	else {
 		set_yellow_high();
 		std::cout << "操作成功！" << std::endl;
 	}
@@ -550,7 +591,8 @@ void Shell::chmod_command(std::string filename, const int authority) {
 	set_red_high();
 	if (auth == "error") {
 		std::cout << "权限输入有误！" << std::endl;
-	} else {
+	}
+	else {
 		auto result = file_system.change_mode(filename, auth);
 		if (!result) {
 			std::cout << "文件不存在！" << std::endl;
@@ -578,11 +620,14 @@ void Shell::chown_command(const std::string& filename, const std::string& userna
 	set_red_high();
 	if (result == "not_root") {
 		std::cout << "非root用户无操作权限！" << std::endl;
-	} else if (result == "user_not_exist") {
+	}
+	else if (result == "user_not_exist") {
 		std::cout << "用户不存在！" << std::endl;
-	} else if (result == "file_not_exist") {
+	}
+	else if (result == "file_not_exist") {
 		std::cout << "文件不存在！" << std::endl;
-	} else {
+	}
+	else {
 		set_yellow_high();
 		std::cout << "操作成功！" << std::endl;
 	}
@@ -617,9 +662,11 @@ void Shell::mv_command(const std::string& filename_old, const std::string& filen
 	set_red_high();
 	if (result == "file_not_exist") {
 		std::cout << "文件不存在！" << std::endl;
-	} else if (result == "filename_error") {
+	}
+	else if (result == "filename_error") {
 		std::cout << "文件名有误！" << std::endl;
-	} else {
+	}
+	else {
 		set_yellow_high();
 		std::cout << "操作成功！" << std::endl;
 	}
@@ -633,9 +680,11 @@ void Shell::cp_command(const std::string& filename_old, const std::string& filen
 	set_red_high();
 	if (result == "filename_error") {
 		std::cout << "文件名有误！" << std::endl;
-	} else if (result == "file_not_exist") {
+	}
+	else if (result == "file_not_exist") {
 		std::cout << "文件不存在！" << std::endl;
-	} else {
+	}
+	else {
 		set_yellow_high();
 		std::cout << "操作成功！" << std::endl;
 	}
@@ -649,9 +698,11 @@ void Shell::rm_command(const std::string& filename) {
 	set_red_high();
 	if (result == "file_not_exist") {
 		std::cout << "文件不存在！" << std::endl;
-	} else if (result == "no_authority") {
+	}
+	else if (result == "no_authority") {
 		std::cout << "没有权限！" << std::endl;
-	} else {
+	}
+	else {
 		set_yellow_high();
 		std::cout << "操作成功！" << std::endl;
 	}
@@ -665,11 +716,14 @@ void Shell::rmdir_command(const std::string& dir_name) {
 	set_red_high();
 	if (result == "directory_not_exist") {
 		std::cout << "文件夹不存在！" << std::endl;
-	} else if (result == "not_empty") {
+	}
+	else if (result == "not_empty") {
 		std::cout << "文件夹非空！" << std::endl;
-	} else if (result == "no_authority") {
+	}
+	else if (result == "no_authority") {
 		std::cout << "没有权限！" << std::endl;
-	} else {
+	}
+	else {
 		set_yellow_high();
 		std::cout << "操作成功！" << std::endl;
 	}
@@ -683,9 +737,11 @@ void Shell::ln_command(const std::string& filename, const std::string& linkname)
 	set_red_high();
 	if (result == "filename_error") {
 		std::cout << "文件名有误！" << std::endl;
-	} else if (result == "file_not_exist") {
+	}
+	else if (result == "file_not_exist") {
 		std::cout << "文件不存在！" << std::endl;
-	} else {
+	}
+	else {
 		set_yellow_high();
 		std::cout << "操作成功！" << std::endl;
 	}
@@ -701,7 +757,8 @@ void Shell::cat_command(const std::string& filename1, const std::string& filenam
 		set_red_high();
 		std::cout << "文件不存在！" << std::endl;
 		set_white();
-	} else {
+	}
+	else {
 		std::cout << result1 << result2 << std::endl;
 	}
 	sub_window();
@@ -725,7 +782,7 @@ void Shell::umask_command(const int authority) {
 
 void Shell::vi_command(const std::string& filename, const std::vector<std::string>& content_vec) {
 	std::string content_str = "";
-	for (const auto &c : content_vec) {
+	for (const auto& c : content_vec) {
 		content_str += c;
 	}
 
@@ -765,7 +822,8 @@ void Shell::ls_l_file_command(const std::string& filename) {
 	if (result == "file_not_exist") {
 		set_red_high();
 		std::cout << "文件不存在！" << std::endl;
-	} else {
+	}
+	else {
 		std::cout << result << std::endl;
 	}
 	sub_window();
@@ -773,9 +831,10 @@ void Shell::ls_l_file_command(const std::string& filename) {
 
 void Shell::ls_l_command() {
 	auto result = file_system.list_all_file_details();
-	for (const auto &c : result) {
+	for (const auto& c : result) {
 		show_path();
 		std::cout << c << std::endl;
 	}
 	sub_window();
 }
+

@@ -61,9 +61,9 @@ public:
 	// 检测文件夹是否已经存在
 	bool check_directory_exist(const std::string& directory_name) const;
 
-//	bool check_authority(const std::string& authority);
+	//	bool check_authority(const std::string& authority);
 
-	static std::vector<std::string> split_path(const std::string &path);
+	static std::vector<std::string> split_path(const std::string& path);
 
 	// int to string
 	static std::string int_to_string(const int num);
@@ -150,10 +150,11 @@ public:
 
 	std::string get_username() const;
 
-	std::string list_file_details(const std::string &filename);
+	std::string list_file_details(const std::string& filename);
 	std::vector<std::string> list_all_file_details();
 
 };
 
 
 #endif
+

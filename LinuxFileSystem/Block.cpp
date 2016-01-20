@@ -33,3 +33,4 @@ Block& Block::operator=(const Block& block) {
 bool operator<(const Block& block1, const Block& block2) {
 	return block1.address < block2.address;
 }
+

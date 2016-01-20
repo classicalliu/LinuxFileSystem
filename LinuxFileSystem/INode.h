@@ -4,7 +4,6 @@
 #include <array>
 #include <memory>
 #include "Block.h"
-#include <ctime>
 
 class INode {
 	// id号
@@ -13,12 +12,8 @@ class INode {
 	int size = 0;
 	// 文件链接计数
 	int count = 1;
-	// 文件地址块数组,4个直接块
+	// 文件地址块数组,4个直接块, 1个一次间接，2个二次间接
 	std::array<std::shared_ptr<Block>, 6> file_address_array;
-		// TODO 设置两个间接地址
-//	std::tuple<std::shared_ptr<Block>, std::shared_ptr<Block>, std::shared_ptr<Block>, std::shared_ptr<Block>, 
-//		std::shared_ptr<std::shared_ptr<Block>>, 
-//		std::shared_ptr<std::shared_ptr<std::shared_ptr<Block>>>> file_address_tuple;
 	// 文件所属用户组
 	int group_id = 0;
 	// 文件所属用户
@@ -82,5 +77,5 @@ public:
 bool operator<(const INode& inode1, const INode& inode2);
 
 
-
 #endif
+
