@@ -43,10 +43,12 @@ public:
 
 	friend bool operator==(const Directory& directory1, const Directory& directory2);
 	friend bool operator!=(const Directory& directory1, const Directory& directory2);
+	friend bool operator<(const Directory& directory1, const Directory& directory2);
 };
 
 bool operator==(const Directory& directory1, const Directory& directory2);
 bool operator!=(const Directory& directory1, const Directory& directory2);
+bool operator<(const Directory& directory1, const Directory& directory2);
 
 #endif
 

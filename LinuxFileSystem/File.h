@@ -26,7 +26,11 @@ public:
 	const short& get_inode_id() const;
 
 	void set_inode_id(const short inode_id);
+
+	friend bool operator<(const File& file1, const File& file2);
 };
+
+bool operator<(const File& file1, const File& file2);
 
 #endif
 

@@ -48,3 +48,7 @@ bool operator!=(const Directory& directory1, const Directory& directory2) {
 	return !(directory1 == directory2);
 }
 
+bool operator<(const Directory& directory1, const Directory& directory2) {
+	return directory1.name < directory2.name;
+}
+
