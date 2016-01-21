@@ -12,7 +12,7 @@ namespace init_block {
 
 class Block {
 	int address = 0;
-//	std::string content = "the file init";
+	//	std::string content = "the file init";
 	std::string content = init_block::content;
 public:
 	static const int SIZE = 512;
@@ -29,12 +29,13 @@ public:
 
 	void set_content(const std::string& content);
 
-	Block& operator=(const Block &block);
+	Block& operator=(const Block& block);
 
-	friend bool operator<(const Block &block1, const Block &block2);
+	friend bool operator<(const Block& block1, const Block& block2);
 };
 
-bool operator<(const Block &block1, const Block &block2);
+bool operator<(const Block& block1, const Block& block2);
 
 
 #endif
+

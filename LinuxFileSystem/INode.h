@@ -5,6 +5,8 @@
 #include <memory>
 #include "Block.h"
 
+static std::string inode_authority = "111111111";
+
 class INode {
 	// id号
 	short id = 0;
@@ -19,7 +21,7 @@ class INode {
 	// 文件所属用户
 	std::string username;
 	// 文件权限 "111111111" 1表示有0表示没有
-	std::string authority = "111111111";
+	std::string authority = inode_authority;
 	// 文件最后修改时间
 	time_t last_modify_time = 0;
 

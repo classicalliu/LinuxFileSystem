@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="User" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQJBAAAgIAAAAAAAAAAQAAEAAAAABAAAAgAAAgAAAAA=</HashCode>
+      <FileName>User.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="INode" Collapsed="true">
+    <Position X="4" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BQBgAAJhIAAAAAAABIBQGAEGACAAAAAAAhAAAAAAQwI=</HashCode>
+      <FileName>INode.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Group" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAEAgAAAAAAAAAAAQAAAAAABAgAAACAAAAAAAAAA=</HashCode>
+      <FileName>Group.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="File" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAIAAQAAEAAAAAAAAEAAAACgAAAAAAAgA=</HashCode>
+      <FileName>File.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Directory" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAIABAAAAABIAAAAAAAAAAAAAAsAAAQAgAACIQQAAA=</HashCode>
+      <FileName>Directory.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Block" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAGAAABAEAAAAAAAAAAAAAAEAIABAAAAAAgAAAAAgA=</HashCode>
+      <FileName>Block.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FileSystem" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIDIjAIIMBAABIIfkAESAhQCBEQAIAADEAAEBENUA=</HashCode>
+      <FileName>FileSystem.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Shell" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EgaAICwgAIAKA4AgA4EAAAAAwAYQAADAIQEAQCkAIAo=</HashCode>
+      <FileName>Shell.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>

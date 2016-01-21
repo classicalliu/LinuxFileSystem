@@ -27,3 +27,4 @@ void File::set_inode_id(const short inode_id) {
 bool operator<(const File& file1, const File& file2) {
 	return file1.file_name < file2.file_name;
 }
+

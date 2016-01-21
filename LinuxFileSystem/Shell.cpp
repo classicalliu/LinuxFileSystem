@@ -426,6 +426,10 @@ void Shell::sub_window() {
 		std::cout << "                  ********************************************" << std::endl;
 		vi_command(command2, vec_tmp);
 	}
+	else if (command1 == "clear") {
+		clear_screen();
+		main_window();
+	}
 	else {
 		show_path();
 		set_red_high();
@@ -821,7 +825,7 @@ void Shell::vi_windows() {
 void Shell::ls_l_file_command(const std::string& filename) {
 	auto result = file_system.list_file_details(filename);
 	show_path();
-	if (result == "file_not_exist") {
+	if (result == "not_found") {
 		set_red_high();
 		std::cout << "文件不存在！" << std::endl;
 	}
