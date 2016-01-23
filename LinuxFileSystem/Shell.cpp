@@ -119,7 +119,7 @@ void Shell::help() {
 	std::cout << " 1. ls                      -->   列出当前目录中的子目录和文件" << std::endl;
 	std::cout << " 2. ls-l <name>             -->   列出<name>的详细信息" << std::endl;
 	std::cout << " 3. ls-L                    -->   列出当前目录中所有的文件和子目录的信息" << std::endl;
-	std::cout << " 4. chmod xxx               -->   xxx为1-7之间的数字，表示用户权限" << std::endl;
+	std::cout << " 4. chmod xxx               -->   x为1-7之间的数字，表示用户权限" << std::endl;
 	std::cout << " 5. chgrp <name>            -->   改变当前文件的组" << std::endl;
 	std::cout << " 6. chown <name>            -->   改变当前文件的用户" << std::endl;
 	std::cout << " 7. psw                     -->   显示当前目录" << std::endl;
