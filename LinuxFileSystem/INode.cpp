@@ -23,7 +23,7 @@ INode::INode(INode&& other): id(other.id), size(other.size), count(1), file_addr
 }
 
 void INode::add_count() {
-	++count;
+	++count;    
 }
 
 const short& INode::get_id() const {
